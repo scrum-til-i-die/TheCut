@@ -27,3 +27,6 @@ def SplitVideo(video_path):
 if __name__ == "__main__":
     # Call function
     SplitVideo("../videos/big_buck_bunny.mp4")
+
+# import os
+# os.system("gsutil cp ./poop.png gs://the-cut-test-bucket")

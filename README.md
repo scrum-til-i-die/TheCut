@@ -16,3 +16,6 @@
 ## How to Run
 - ???
 
+### Development Set Up
+#### Vision API
+`pip3 install --upgrade google-cloud-vision`
