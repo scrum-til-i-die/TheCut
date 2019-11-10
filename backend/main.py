@@ -1,5 +1,6 @@
 # This program will take a video input and extract frames
 import cv2
+from localProcess import localProcess
 
 def SplitVideo(video_path):
 
@@ -26,4 +27,8 @@ def SplitVideo(video_path):
 
 if __name__ == "__main__":
     # Call function
-    SplitVideo("../videos/big_buck_bunny.mp4")
+    SplitVideo("../videos/inception.mov")
+    localProcess('../images/frame-200.jpg')
+
+# import os
+# os.system("gsutil cp ./poop.png gs://the-cut-test-bucket")
