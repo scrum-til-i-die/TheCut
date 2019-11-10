@@ -1,6 +1,6 @@
 # This program will take a video input and extract frames
-import cv2
-from localProcess import localProcess
+import cv2, os
+from singleProcess import singleProcess
 
 def SplitVideo(video_path):
 
@@ -23,12 +23,19 @@ def SplitVideo(video_path):
 
         # increment frame_count
         frame_count += 1
+    print ("...video splitted into images")
 
+# upload images into google cloud storage gs://the-cut-test-bucket
+def uploadImg():
+    os.system("gsutil cp ../images/frame-0.jpg gs://the-cut-test-bucket")
+    print ("...images uploaded")
+    # directory = os.fsencode("../images/")
+    # for file in os.listdir(directory):
+    #     os.system(f"gsutil cp {file} gs://the-cut-test-bucket")
+    # print ('...images uploaded')
 
 if __name__ == "__main__":
     # Call function
     SplitVideo("../videos/inception.mov")
-    localProcess('../images/frame-200.jpg')
-
-# import os
-# os.system("gsutil cp ./poop.png gs://the-cut-test-bucket")
+    uploadImg()
+    singleProcess('gs://the-cut-test-bucket/frame-0.jpg')
