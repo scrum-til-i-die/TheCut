@@ -14,7 +14,7 @@
 - ??
 
 ## How to Run
-- ???
+- python3 backend/main.py
 
 ### Development Set Up
 #### Vision API
