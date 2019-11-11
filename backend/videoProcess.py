@@ -26,11 +26,9 @@ def SplitVideo(video_path):
         frame_count += 1
     print ("...video splitted into images")
 
-# upload images into google cloud storage gs://the-cut-test-bucket
+
 def uploadImg():
-    os.system("gsutil cp ../images/frame-0.jpg gs://the-cut-test-bucket")
+    # os.system("gsutil cp ../images/frame-0.jpg gs://the-cut-test-bucket")
+    for file in os.listdir("../images/"):
+        os.system(f"gsutil cp ../images/{file} gs://the-cut-test-bucket")
     print ("...images uploaded")
-    # directory = os.fsencode("../images/")
-    # for file in os.listdir(directory):
-    #     os.system(f"gsutil cp {file} gs://the-cut-test-bucket")
-    # print ('...images uploaded')

@@ -1,25 +1,34 @@
-# python3 singleProcess.py
 from google.cloud import vision_v1
+from collections import defaultdict
 
 
-def singleProcess(imagePath):
+def singleProcess():
+    dict = defaultdict(lambda: 0)
     client = vision_v1.ImageAnnotatorClient()
 
-    response = client.annotate_image(
-        {
-            'image': {'source': {'image_uri': imagePath}},
-            'features': [{'type': vision_v1.enums.Feature.Type.WEB_DETECTION}]
-        }
-    )
+    imagePaths = [
+        'gs://the-cut-test-bucket/frame-0.jpg',
+        'gs://the-cut-test-bucket/frame-200.jpg',
+        'gs://the-cut-test-bucket/frame-400.jpg',
+        'gs://the-cut-test-bucket/frame-600.jpg',
+        'gs://the-cut-test-bucket/frame-800.jpg'
+    ]
 
-    output = response.web_detection.web_entities
+    for i in range(5):
+        response = client.annotate_image(
+            {
+                'image': {'source': {'image_uri': imagePaths[i]}},
+                'features': [{'type': vision_v1.enums.Feature.Type.WEB_DETECTION}]
+            }
+        )
 
-    # print(response)
-    print('...web detections:')
-    for d in output:
-        if d.description:
-            print(d.description)
+        output = response.web_detection.web_entities
+        for d in output:
+            if d.description:
+                dict[d.description] += 1
 
+    print ("THE MOVIE IS: ", max(dict, key=dict.get))
     return output
 
-# singleProcess('gs://the-cut-test-bucket/frame-0.jpg')
+
+# singleProcess()
