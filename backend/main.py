@@ -3,9 +3,9 @@ from audioProcess import *
 
 if __name__ == "__main__":
     # Video Extraction
-    # SplitVideo("../videos/inception.mov")
-    # uploadImg()
-    # singleProcess('gs://the-cut-test-bucket/frame-0.jpg')
+    SplitVideo("../videos/inception.mov")
+    uploadImg()
+    singleProcess() # right now it processes 5 images
     
     # Audio Extraction
     transcibedArray = TranscribeAudio("../videos/InceptionCut.mp4")
