@@ -19,7 +19,7 @@ def SplitVideo(video_path):
         success, image = video.read()
 
         # Save the frame with frame count every 20 frames
-        if frame_count % 20 == 0:
+        if frame_count % 200 == 0:
             cv2.imwrite("../images/frame-%d.jpg" % frame_count, image)
 
         # increment frame_count
