@@ -1,0 +1,86 @@
+\documentclass[12pt, titlepage]{article}
+
+% Imported Packages
+%------------------------------------------------------------------------------
+\usepackage{amssymb}
+\usepackage{amstext}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{enumerate}
+\usepackage{fancyhdr}
+\usepackage[margin=1in]{geometry}
+\usepackage{extarrows}
+\usepackage{setspace}
+\usepackage{booktabs}
+\usepackage[normalem]{ulem}
+\usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage[round]{natbib}
+\usepackage{hyperref}
+\usepackage{soul}
+
+%------------------------------------------------------------------------------
+
+% Header and Footer
+%------------------------------------------------------------------------------
+\pagestyle{plain}  
+\renewcommand\headrulewidth{0.4pt}                          
+\renewcommand\footrulewidth{0.4pt}                                    
+%------------------------------------------------------------------------------
+
+% Title Details
+%------------------------------------------------------------------------------
+\title{SE 4GB6: Development Process\\ The Cut}
+\author{Group 17
+		\\ Joseph Lu - luy89
+		\\ Matthew Po - pom
+		\\ Stanley Liu - liuz23
+		\\ Suhavi Sandhu - sandhs11
+}
+\date{\today}       
+
+\begin{document}
+
+\maketitle
+
+\section{Development Process}
+
+\subsection{Agile Framework: Scrum}
+
+\begin{itemize}
+    \item Feature delivery will be done through Scrum framework
+    \begin{itemize}
+        \item Sprints: period of time to deliver a set number of tasks (user stories)
+        \begin{itemize}
+            \item Will aim to deliver a set amount of user stories based on an estimated number of story points we can deliver
+            \item User stories not completed in the task can be re-added to a different sprint (based on how much effort remains and deadlines)
+        \end{itemize}
+        \item User Stories: incremental tasks to deliver a feature of the product
+        \begin{itemize}
+            \item Answers the questions: What (we are trying to accomplish), Why (we are trying to complete said What)
+            \item User stories will have an estimated number of “story points” to estimate the amount of effort required to complete task
+            \item Can be revised as development of the product evolves
+            \item A user story can be assigned to a member of the team, however the responsibility of completing the user story ultimately falls to the team as a whole
+            \item Each user story should be associated with a pull request to the master branch
+            \begin{itemize}
+                \item This in turn means that bug fixes and refactoring of any documentation / code will be considered a user story with the criteria of answering the “What” and “Why” questions
+            \end{itemize}
+        \end{itemize}
+    \end{itemize}
+    \item The use of sprints and user stories will allow the team to estimate and track progression of features that will eventually lead to a delivered product. The framework is set to break down features into smaller tasks and modularly deliver the final product. The use of sprints allows us to work on user stories in small chunks while continuing to balance other work (school, personal, etc)
+    \item Tools to be used to track Scrum process: Github
+    \begin{itemize}
+        \item Milestones, Issues, Project Board
+    \end{itemize}
+\end{itemize}
+
+
+\subsection{Version Control: Github}
+\begin{itemize}
+    \item All revisions to code done through peer-reviewed pull requests to ensure that at least 2 members of the group are aware of code changes
+    \begin{itemize}
+        \item Includes (but not limited to) features, bug fixes, refactoring of the product implementation
+    \end{itemize}
+\end{itemize}
+
+\end{document}
