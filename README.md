@@ -13,9 +13,12 @@
 - python
 - ??
 
-## How to Run
-- python3 backend/main.py
-
 ### Development Set Up
+`npm install` to install dependencies.
+#### React-Native Set Up
+Follow the link to set up Android/Java development environment \
+https://facebook.github.io/react-native/docs/getting-started \
+On Android Studio/(your favorite code editor), run `npm run adroid`
 #### Vision API
-`pip3 install --upgrade google-cloud-vision`
+Install Vision API: `pip3 install --upgrade google-cloud-vision`\
+To test: `python3 backend/main.py`

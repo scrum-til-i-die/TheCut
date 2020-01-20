@@ -4,9 +4,8 @@ from videoProcess import *
 if __name__ == "__main__":
     # Video Extraction
     SplitVideo("../videos/inception.mov")
-    zipImg()
     uploadImg()
-    singleProcess() # right now it processes 5 images
+    singleProcess() # right now it processes 6 images
     
     # Audio Extraction
     # transcibedArray = TranscribeAudio("../videos/InceptionCut.mp4")
