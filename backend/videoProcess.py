@@ -37,10 +37,10 @@ def SplitVideo(video_path):
 #     return
 
 def uploadImg():
-    os.system("gsutil cp ./imageZip.zip gs://the-cut-test-bucket")
-    # for file in os.listdir("../images/"):
-    #     os.system(f"gsutil cp ../images/{file} gs://the-cut-test-bucket")
-    # print ("...images uploaded")
+    # os.system("gsutil cp ./imageZip.zip gs://the-cut-test-bucket")
+    for file in os.listdir("../images/"):
+        os.system(f"gsutil cp ../images/{file} gs://the-cut-test-bucket")
+    print ("...images uploaded")
 
 def singleProcess():
     dict = defaultdict(lambda: 0)
@@ -68,5 +68,4 @@ def singleProcess():
             if d.description:
                 dict[d.description] += 1
 
-    print ("THE MOVIE IS: ", max(dict, key=dict.get))
-    return output
+    print ("Top 10 result", sorted(dict, key=dict.get, reverse=True)[:10])
