@@ -20,16 +20,13 @@ class App extends Component {
   componentWillMount(){
       axios.get('https://api.themoviedb.org/3/search/movie?api_key='+apiKey+'&language=en-US&query='+this.state.movie+'&page=1')
       .then(response => 
-        {for (var m in response.data.results) {
-          if (response.data.results[m].title == this.state.movie) { 
-            id = response.data.results[m].id;
-            axios.get('https://api.themoviedb.org/3/movie/'+id+'?api_key='+apiKey)
-            .then(response2 => this.setState({ metadata : response2.data }) )
-            .catch(function (error) {
-              alert(error);
-            });
-          }
-        }
+        {
+          id = response.data.results[0].id;
+          axios.get('https://api.themoviedb.org/3/movie/'+id+'?api_key='+apiKey)
+          .then(response2 => this.setState({ metadata : response2.data }) )
+          .catch(function (error) {
+            alert(error);
+          });
       })
       .catch(function (error) {
         alert(error);
@@ -39,9 +36,12 @@ class App extends Component {
   render() {
     return(
       <View style={styles.container}>
-        <Text>{this.state.movie}</Text>
-        <Text>{this.state.metadata.budget}</Text>
-        <Text>{this.state.metadata.tagline}</Text>
+        <Text style={styles.bigBlue}>{this.state.metadata.title}</Text>
+        <Text style={styles.alignCenter}>Overview: {this.state.metadata.overview}</Text>
+        <Text>Budget: ${this.state.metadata.budget}</Text>
+        <Text>Revenue: ${this.state.metadata.revenue}</Text>
+        <Text>Runtime: {this.state.metadata.runtime}</Text>
+        <Text>Tagline: "{this.state.metadata.tagline}"</Text>
       </View>
     )
   }
@@ -54,6 +54,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  bigBlue: {
+    color: 'blue',
+    fontWeight: 'bold',
+    fontSize: 30,
+  },
+  alignCenter: {
+    textAlign: 'center',
+    width: 200,
+    padding: 10
+  }
+
 });
 
 export default App;
