@@ -13,7 +13,7 @@ import { apiKey } from 'react-native-dotenv'
 
 class App extends Component {
   state = { 
-    movie: 'Inception',
+    movie: 'jurassic world',
     metadata: [] 
   };
 
@@ -40,7 +40,7 @@ class App extends Component {
         <Text style={styles.alignCenter}>Overview: {this.state.metadata.overview}</Text>
         <Text>Budget: ${this.state.metadata.budget}</Text>
         <Text>Revenue: ${this.state.metadata.revenue}</Text>
-        <Text>Runtime: {this.state.metadata.runtime}</Text>
+        <Text>Runtime: {this.state.metadata.runtime} min</Text>
         <Text>Tagline: "{this.state.metadata.tagline}"</Text>
       </View>
     )
