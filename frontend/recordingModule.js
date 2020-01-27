@@ -17,10 +17,12 @@ class RecordingModule extends PureComponent {
     this.setState({ recording: true });
     // default to mp4 for android as codec is not set
     const { uri, codec = "mp4" } = await this.camera.recordAsync();
+    console.log(uri);
   }
 
   stopRecording() {
     this.camera.stopRecording();
+    this.setState({ recording: false });
   }
 
   render() {
@@ -63,8 +65,8 @@ class RecordingModule extends PureComponent {
           style={styles.preview}
           type={RNCamera.Constants.Type.back}
           flashMode={RNCamera.Constants.FlashMode.on}
-          permissionDialogTitle={"Permission to use camera"}
-          permissionDialogMessage={"We need your permission to use your camera phone"}
+        // permissionDialogTitle={"Permission to use camera"}
+        // permissionDialogMessage={"We need your permission to use your camera phone"}
         />
         <View style={{ flex: 0, flexDirection: "row", justifyContent: "center" }}>
           {button}
