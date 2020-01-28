@@ -3,7 +3,7 @@ from videoProcess import *
 
 if __name__ == "__main__":
     # Video Extraction
-    SplitVideo("../videos/inception.mov")
+    SplitVideo("videos/inception.mov")
     uploadImg()
     singleProcess() # right now it processes 6 images
     

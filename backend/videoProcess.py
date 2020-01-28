@@ -40,7 +40,7 @@ def uploadImg():
     # os.system("gsutil cp ./imageZip.zip gs://the-cut-test-bucket")
     for file in os.listdir("images/"):
         os.system(f"gsutil cp images/{file} gs://the-cut-test-bucket")
-    print ("...images uploaded")
+    print ("...images uploaded\n")
 
 def singleProcess():
     dict = defaultdict(lambda: 0)
@@ -68,4 +68,4 @@ def singleProcess():
             if d.description:
                 dict[d.description] += 1
 
-    print ("Top 10 result", sorted(dict, key=dict.get, reverse=True)[:10])
+    print ("Top 10 results:\n", sorted(dict, key=dict.get, reverse=True)[:10])

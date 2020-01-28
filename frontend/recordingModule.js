@@ -17,7 +17,7 @@ class RecordingModule extends PureComponent {
     this.setState({ recording: true });
     // default to mp4 for android as codec is not set
     const { uri, codec = "mp4" } = await this.camera.recordAsync();
-    console.log(uri);
+    console.log(uri); // file:///data/user/0/com.frontend/cache/Camera/5289d397-b970-4372-b938-a2dfc48431ac.mp4
   }
 
   stopRecording() {
