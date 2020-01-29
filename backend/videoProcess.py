@@ -22,7 +22,7 @@ def SplitVideo(video_path):
 
         # Save the frame with frame count every 20 frames
         if frame_count % 200 == 0:
-            cv2.imwrite("../images/frame-%d.jpg" % frame_count, image)
+            cv2.imwrite("images/frame-%d.jpg" % frame_count, image)
 
         # increment frame_count
         frame_count += 1
