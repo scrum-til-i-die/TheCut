@@ -1,17 +1,18 @@
-// call required packages
 const express = require('express');
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const uuid = require('uuid');
 
 const app = express();
+// Destination path needs to be set on prod
+const uploadPath = '/Users/MattPo/Documents/Uploads'
 
 app.use(bodyParser.urlencoded({extended: true}));
 
 // Set Storage to store files
 var storage = multer.diskStorage({
     destination: function(req, file, cb){
-        cb(null, '../../../videos/uploads/')
+        cb(null, uploadPath)
     },
     filename: function(req, file, cb){
         cb(null, `${uuid()}.mp4`)
@@ -20,12 +21,9 @@ var storage = multer.diskStorage({
 
 var upload = multer({storage: storage});
 
-// app.get('/', function(req, res){
-//     res.sendFile(__dirname + '/index.html');
-// });
-
+// TODO: post call needs to return JobId?
 app.post('/uploadfile', upload.any(), (req, res) => {
-    console.log('file received');
+    // console.log('file received');
     return res.send({
     success: true
     })
