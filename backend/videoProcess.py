@@ -38,9 +38,9 @@ def SplitVideo(video_path):
 
 def uploadImg():
     # os.system("gsutil cp ./imageZip.zip gs://the-cut-test-bucket")
-    for file in os.listdir("images/"):
-        os.system(f"gsutil cp images/{file} gs://the-cut-test-bucket")
-    print ("...images uploaded\n")
+    for file in os.listdir("../images/"):
+        os.system(f"gsutil cp ../images/{file} gs://the-cut-test-bucket")
+    print ("...images uploaded")
 
 def singleProcess():
     dict = defaultdict(lambda: 0)
