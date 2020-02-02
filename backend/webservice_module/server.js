@@ -2,30 +2,42 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const uuid = require('uuid');
+const fs = require('fs');
 
 const app = express();
 // Destination path needs to be set on prod
-const uploadPath = '/Users/MattPo/Documents/Uploads'
+const uploadPath = '/Users/MattPo/Documents/Capstone/Testing/Uploads/'
+var fileName = '';
 
 app.use(bodyParser.urlencoded({extended: true}));
 
 // Set Storage to store files
 var storage = multer.diskStorage({
     destination: function(req, file, cb){
-        cb(null, uploadPath)
+        fileName = uuid();
+        var dirName = `${uploadPath}${fileName}`;
+        fs.mkdir(dirName, function(err){
+            if(err) throw err;
+        });
+        cb(null, dirName)
     },
     filename: function(req, file, cb){
-        cb(null, `${uuid()}.mp4`)
+        cb(null, `${fileName}.mp4`)
     }
 })
 
 var upload = multer({storage: storage});
 
-// TODO: post call needs to return JobId?
 app.post('/uploadfile', upload.any(), (req, res) => {
-    // console.log('file received');
+    var file = req.files[0];
+    var fileName = file.originalname;
+    var jobId = file.filename.split(".")[0];
+
     return res.send({
-    success: true
+        status: "File Received",
+        file_name: fileName,
+        job_id: jobId,
+        created_on: Date.now()
     })
 });
 
