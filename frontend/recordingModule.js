@@ -52,7 +52,7 @@ class RecordingModule extends Component {
   }
 
   render() {
-    // this.permissionCheck();
+    this.permissionCheck();
 
     const { recording, video } = this.state;
     return (
