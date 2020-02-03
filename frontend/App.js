@@ -1,70 +1,110 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
+import React, { Component, useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
+import { Camera } from 'expo-camera';
+import * as Permissions from 'expo-permissions';
 
-import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-const axios = require('axios');
-import { apiKey } from 'react-native-dotenv'
-
-class App extends Component {
-  state = { 
-    movie: 'jurassic world',
-    metadata: [] 
+class RecordingModule extends Component {
+  state = {
+    video: null,
+    picture: null,
+    recording: false,
+    cameraPermission: false
   };
 
-  componentWillMount(){
-      axios.get('https://api.themoviedb.org/3/search/movie?api_key='+apiKey+'&language=en-US&query='+this.state.movie+'&page=1')
-      .then(response => 
-        {
-          id = response.data.results[0].id;
-          axios.get('https://api.themoviedb.org/3/movie/'+id+'?api_key='+apiKey)
-          .then(response2 => this.setState({ metadata : response2.data }) )
-          .catch(function (error) {
-            alert(error);
-          });
-      })
-      .catch(function (error) {
-        alert(error);
+  _uploadVideo = async () => {
+    const { video } = this.state;
+    // video.uri
+  };
+
+  _StopRecord = async () => {
+    this.setState({ recording: false }, () => {
+      this.cam.stopRecording();
+    });
+  };
+
+  _StartRecord = async () => {
+    if (this.cam) {
+      this.setState({ recording: true }, async () => {
+        const video = await this.cam.recordAsync();
+        this.setState({ video });
+        console.log(video.uri);
       });
-  }
+    }
+  };
+
+  toogleRecord = () => {
+    const { recording } = this.state;
+
+    if (recording) {
+      this._StopRecord();
+    } else {
+      this._StartRecord();
+    }
+  };
+
+  _showCamera = async () => {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA);
+    if (status === "granted") {
+      this.setState({ cameraPermission: true });
+    } else {
+      return <Text>No access to camera</Text>;
+    }
+  };
 
   render() {
-    return(
-      <View style={styles.container}>
-        <Text style={styles.bigBlue}>{this.state.metadata.title}</Text>
-        <Text style={styles.alignCenter}>Overview: {this.state.metadata.overview}</Text>
-        <Text>Budget: ${this.state.metadata.budget}</Text>
-        <Text>Revenue: ${this.state.metadata.revenue}</Text>
-        <Text>Runtime: {this.state.metadata.runtime} min</Text>
-        <Text>Tagline: "{this.state.metadata.tagline}"</Text>
+    const { recording, video, cameraPermission } = this.state;
+    console.log("cameraPermission", this.state.cameraPermission);
+    return (
+      <View
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          flex: 1,
+          width: "100%"
+        }}
+      >
+        {cameraPermission ? (
+          <Camera
+            ref={cam => (this.cam = cam)}
+            style={{
+              justifyContent: "flex-end",
+              alignItems: "center",
+              flex: 1,
+              width: "100%"
+            }}
+          >
+            {video && (
+              <TouchableOpacity
+                onPress={this._uploadVideo}
+                style={{
+                  padding: 20,
+                  width: "100%",
+                  backgroundColor: "#fff"
+                }}
+              >
+                <Text style={{ textAlign: "center" }}>Upload</Text>
+              </TouchableOpacity>
+            )}
+            <TouchableOpacity
+              onPress={this.toogleRecord}
+              style={{
+                padding: 20,
+                width: "100%",
+                backgroundColor: recording ? "#ef4f84" : "#4fef97"
+              }}
+            >
+              <Text style={{ textAlign: "center" }}>
+                {recording ? "Stop" : "Record"}
+              </Text>
+            </TouchableOpacity>
+          </Camera>) : (
+            <TouchableOpacity onPress={this._showCamera}>
+              <Text> Record </Text>
+            </TouchableOpacity>
+          )}
       </View>
-    )
+    );
   }
-};
+}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  bigBlue: {
-    color: 'blue',
-    fontWeight: 'bold',
-    fontSize: 30,
-  },
-  alignCenter: {
-    textAlign: 'center',
-    width: 200,
-    padding: 10
-  }
-
-});
-
-export default App;
+export default RecordingModule;

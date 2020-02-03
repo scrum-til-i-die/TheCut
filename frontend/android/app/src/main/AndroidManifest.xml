@@ -2,6 +2,11 @@
   package="com.frontend">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Required -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <!-- Include this only if you are planning to use the microphone for video recording -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
 
     <application
       android:name=".MainApplication"
@@ -9,7 +14,8 @@
       android:icon="@mipmap/ic_launcher"
       android:roundIcon="@mipmap/ic_launcher_round"
       android:allowBackup="false"
-      android:theme="@style/AppTheme">
+      android:theme="@style/AppTheme"
+      android:usesCleartextTraffic="true">
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
