@@ -4,8 +4,10 @@
   "description": "",
   "main": "./webservice_module/server.js",
   "scripts": {
+    "start": "node ./webservice_module/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon ./webservice_module/server.js"
+    "dev": "nodemon ./webservice_module/server.js",
+    "startserver": "node ./webservice_module/server.js"
   },
   "author": "",
   "license": "ISC",

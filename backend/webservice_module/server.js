@@ -4,11 +4,15 @@ const multer = require('multer');
 const uuid = require('uuid');
 const fs = require('fs');
 
-const app = express();
-// Destination path needs to be set on prod
-const uploadPath = '/Users/MattPo/Documents/Capstone/Testing/Uploads/'
+const uploadPath = '/app/Uploads/'
+// if (!fs.exists(uploadPath)){
+//     fs.mkdir(uploadPath, function(err){
+//         if (err) throw err;
+//     })
+// }
 var fileName = '';
 
+const app = express();
 app.use(bodyParser.urlencoded({extended: true}));
 
 // Set Storage to store files
