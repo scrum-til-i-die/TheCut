@@ -4,5 +4,7 @@ images
 imageZip.zip
 .DS_Store
 __pycache__/
+.env
 node_modules/
 secrets/
+settings.json
