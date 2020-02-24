@@ -4,12 +4,7 @@ const multer = require('multer');
 const uuid = require('uuid');
 const fs = require('fs');
 
-const uploadPath = '/app/Uploads/'
-// if (!fs.exists(uploadPath)){
-//     fs.mkdir(uploadPath, function(err){
-//         if (err) throw err;
-//     })
-// }
+const uploadPath = '/app/uploads/'
 var fileName = '';
 
 const app = express();

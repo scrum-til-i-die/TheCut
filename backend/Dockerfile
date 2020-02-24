@@ -2,7 +2,7 @@ FROM node:10
 
 WORKDIR /app
 
-RUN mkdir Uploads/
+RUN mkdir uploads/
 
 COPY package*.json ./
 
