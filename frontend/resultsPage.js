@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Container, Header, Content, List, ListItem, Text } from 'native-base';
+import { View, StyleSheet, Linking } from 'react-native';
+import { Container, Header, Left, Body, Right, Button, Icon, Title, Content, List, ListItem, Text } from 'native-base';
 const axios = require('axios');
 import { apiKey } from 'react-native-dotenv'
 
 class Results extends Component {
   state = {
-    movie: 'jurassic world',
+    movie: 'jurassic park',
     metadata: []
   };
 
-  componentWillMount() {
+  componentDidMount() {
     axios.get('https://api.themoviedb.org/3/search/movie?api_key=' + apiKey + '&language=en-US&query=' + this.state.movie + '&page=1')
       .then(response => {
         id = response.data.results[0].id;
@@ -25,77 +25,83 @@ class Results extends Component {
       });
   }
 
+  loadInBrowser = () => {
+    const homepage = this.state.metadata.homepage;
+    if (homepage) {
+      Linking.openURL(homepage);
+    } else {
+      alert("Homepage does not exists!")
+    }
+  };
+
   render() {
-    return (<Container>
-      <Header />
-      <Content>
-        <List>
-          <ListItem itemDivider>
-            <Text>Movie Title</Text>
-          </ListItem>
-          <ListItem>
-            <Text>{this.state.metadata.title}</Text>
-          </ListItem>
+    return (
+      <Container>
 
-          <ListItem itemDivider>
-            <Text>Overview</Text>
-          </ListItem>
-          <ListItem>
-            <Text>{this.state.metadata.overview}</Text>
-          </ListItem>
+        <Header>
+          <Left>
+            <Button hasText transparent>
+              <Text>Back</Text>
+            </Button>
+          </Left>
+          <Body>
+            <Title>Result</Title>
+          </Body>
+          <Right />
+        </Header>
 
-          <ListItem itemDivider>
-            <Text>Budget</Text>
-          </ListItem>
-          <ListItem>
-            <Text>${this.state.metadata.budget}</Text>
-          </ListItem>
+        <Content>
+          <List>
+            <ListItem itemDivider>
+              <Text >Movie Title</Text>
+            </ListItem>
 
-          <ListItem itemDivider>
-            <Text>Revenue</Text>
-          </ListItem>
-          <ListItem>
-            <Text>${this.state.metadata.revenue}</Text>
-          </ListItem>
+            <Text style={styles.movieTitle}>{this.state.metadata.title}</Text>
 
-          <ListItem itemDivider>
-            <Text>Runtime</Text>
-          </ListItem>
-          <ListItem>
-            <Text>{this.state.metadata.runtime} min</Text>
-          </ListItem>
+            <ListItem itemDivider>
+              <Text>Overview</Text>
+            </ListItem>
 
-          <ListItem itemDivider>
-            <Text>Tagline</Text>
-          </ListItem>
-          <ListItem>
-            <Text>{this.state.metadata.tagline}</Text>
-          </ListItem>
-        </List>
-      </Content>
-    </Container>
+            <ListItem>
+              <Text>{this.state.metadata.overview}</Text>
+            </ListItem>
+
+            <ListItem itemDivider>
+              <Text>Details</Text>
+            </ListItem>
+
+            <ListItem>
+              <Text>Runtime: {this.state.metadata.runtime} min</Text>
+            </ListItem>
+
+            <ListItem>
+              <Text>Budget: ${this.state.metadata.budget}</Text>
+            </ListItem>
+
+            <ListItem>
+              <Text>Revenue: ${this.state.metadata.revenue}</Text>
+            </ListItem>
+
+            <ListItem>
+              <Text>Tagline: {this.state.metadata.tagline}</Text>
+            </ListItem>
+          </List>
+        </Content>
+
+      </Container>
     )
   }
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  bigBlue: {
-    color: 'blue',
-    fontWeight: 'bold',
-    fontSize: 30,
-  },
-  alignCenter: {
+  movieTitle: {
     textAlign: 'center',
-    width: 200,
-    padding: 10
+    fontSize: 25,
+    padding: 20
+  },
+  centerText: {
+    textAlign: 'center'
   }
-
 });
 
 export default Results;
