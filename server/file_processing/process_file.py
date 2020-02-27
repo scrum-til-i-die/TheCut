@@ -45,16 +45,18 @@ class ProcessFile(threading.Thread):
         # print (transcibedArray)
         # for sentence in transcibedArray:
         #     print ("Transcribed: {}".format(sentence))
-
   
+    def analyze_results(self, videoResults, audioResults):
+        # combine results / format
+        return "Movie Identified"
+
     def run(self): 
         videoResults = self.process_audio()
-        self.process_video()
+        audioResult = self.process_video()
 
         if self.stopped():
             self.has_timeout()
             return
 
-        Result = "Movie Identified"
+        Result = self.analyze_results(videoResults, audioResult)
         return
-        
