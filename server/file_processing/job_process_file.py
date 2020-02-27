@@ -1,14 +1,3 @@
-
-
-# def processVideo(jobId):
-
-
-#     # Audio Extraction
-
-
-#     print "Processing job {}".format(jobId)
-
-
 import time
 import threading
 from video_process import *
