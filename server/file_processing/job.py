@@ -17,13 +17,12 @@ class Job(threading.Thread):
     def run(self): 
         x = ProcessFile(self.jobId)
         x.start()
-        x.join(timeout = 3)
+        x.join(timeout = 120)
         x.stop()
 
         if (x.is_alive):
-            print ("Updating job entry to timeout error...")
+            # print ("Updating job entry to timeout error...")
             return
         
         result = x.Result
-        print(result)
-        
+        print("Calling web controller to return results:\n{}".format(result))

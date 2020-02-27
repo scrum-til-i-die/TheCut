@@ -1,23 +1,18 @@
-# # from video_process import *
-# # from audio_Process import *
+
 
 # def processVideo(jobId):
-#     # # Video Extraction
-#     # SplitVideo(f"~/app/uploads/{jobId}/{jobId}.mp4")
-#     # uploadImg()
-#     # output = singleProcess() # right now it processes 6 images
+
 
 #     # Audio Extraction
-#     # transcibedArray = TranscribeAudio("../videos/InceptionCut.mp4")
-#     # print (transcibedArray)
-#     # for sentence in transcibedArray:
-#     #     print ("Transcribed: {}".format(sentence))
+
 
 #     print "Processing job {}".format(jobId)
 
 
 import time
 import threading
+from video_process import *
+from audio_Process import *
 
 class ProcessFile(threading.Thread):   
     def __init__(self, jobId): 
@@ -37,16 +32,24 @@ class ProcessFile(threading.Thread):
         return self._stop.isSet() 
     
     def process_video(self):
-        print "Processing video {}".format(self.jobId)
+        return "Processing video {}".format(self.jobId)
+
+        # SplitVideo(f"~/app/uploads/{jobId}/{jobId}.mp4")
+        # uploadImg()
+        # output = singleProcess() # right now it processes 6 images
     
     def process_audio(self):
-        print "Processing audio {}".format(self.jobId)
+        return "Processing audio {}".format(self.jobId)
+        
+        # transcibedArray = TranscribeAudio("../videos/InceptionCut.mp4")
+        # print (transcibedArray)
+        # for sentence in transcibedArray:
+        #     print ("Transcribed: {}".format(sentence))
+
   
     def run(self): 
-        self.process_audio()
-        time.sleep(2)
+        videoResults = self.process_audio()
         self.process_video()
-        time.sleep(4)
 
         if self.stopped():
             self.has_timeout()
