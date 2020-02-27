@@ -1,10 +1,11 @@
 import time
 import threading
-from video_process import *
-from audio_Process import *
+# from video_process import *
+# from audio_Process import *
 
 class ProcessFile(threading.Thread):   
     def __init__(self, jobId): 
+        self.Result = None
         self.jobId = jobId
         self._stop = threading.Event() 
         threading.Thread.__init__(self)
@@ -35,17 +36,18 @@ class ProcessFile(threading.Thread):
         # for sentence in transcibedArray:
         #     print ("Transcribed: {}".format(sentence))
   
-    def analyze_results(self, videoResults, audioResults):
+    def analyze_results(self):
         # combine results / format
+        videoResults = self.process_audio()
+        audioResult = self.process_video()
         return "Movie Identified"
 
     def run(self): 
-        videoResults = self.process_audio()
-        audioResult = self.process_video()
+        result = self.analyze_results()
 
         if self.stopped():
             self.has_timeout()
             return
 
-        Result = self.analyze_results(videoResults, audioResult)
+        self.Result = result
         return

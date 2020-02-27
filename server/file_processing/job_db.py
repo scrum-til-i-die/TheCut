@@ -6,9 +6,8 @@ from mysql.connector import MySQLConnection
 class DbConnect():
     global my_db
     global my_cursor
-    global db_config
     
-########################## Configuration
+#################################################### Configuration
     filename = '/app/secrets/config.ini'
     section = 'mysql'
     parser = ConfigParser()
@@ -27,7 +26,7 @@ class DbConnect():
     my_db = MySQLConnection(**db_config)
     my_cursor = my_db.cursor()
 
-##########################
+####################################################
 
     @classmethod
     def insert_new(cls, jobId, status, created_on):
@@ -44,4 +43,13 @@ class DbConnect():
 
         my_cursor.execute(sql, val)
         my_db.commit()
+    
+    @classmethod 
+    def job_complete(cls, jobId, status, finished_on, result = None, error= None):
+        sql = "UPDATE Jobs Set status = %s, finished_on = %s, result = %s, error_message = %s WHERE job_id = %s"
+        val = (status, finished_on, result, error, jobId)
+
+        my_cursor.execute(sql, val)
+        my_db.commit()
+
     

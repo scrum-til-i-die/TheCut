@@ -19,8 +19,9 @@ def run_job():
     x.start()
 
     return {
-        "job_id": jobId,
-        "status": "running",
+        "job_id": x.jobId,
+        "status": x.status,
+        "created_on": x.created_on
         }
 
 if __name__ == "__main__":
