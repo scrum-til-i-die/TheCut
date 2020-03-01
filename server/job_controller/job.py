@@ -29,7 +29,7 @@ class Job(threading.Thread):
         x = ProcessFile(self.jobId)
         x.start()
         x.join(timeout = 120)
-        x.stop()
+        x.stop_thread()
         finished_on = datetime.datetime.now()
 
         if (x.is_alive()):

@@ -7,7 +7,7 @@ class ProcessFile(threading.Thread):
     def __init__(self, jobId): 
         self.Result = None
         self.jobId = jobId
-        self._stop = threading.Event() 
+        self._stopper = threading.Event() 
         threading.Thread.__init__(self)
   
     def has_timeout(self):
@@ -15,11 +15,11 @@ class ProcessFile(threading.Thread):
         return
 
     # function using _stop function 
-    def stop(self): 
-        self._stop.set() 
+    def stop_thread(self): 
+        self._stopper.set() 
   
     def stopped(self): 
-        return self._stop.isSet() 
+        return self._stopper.is_set() 
     
     def process_video(self):
         return "Processing video {}".format(self.jobId)

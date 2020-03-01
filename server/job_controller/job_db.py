@@ -13,6 +13,9 @@ class DbConnect():
     parser = ConfigParser()
     parser.read(filename)
 
+    if not (os.path.exists(filename)):
+        raise Exception ('{0} cannot be acessed because it does not exist.'.format(filename))
+
     db = {}
     if parser.has_section(section):
         items = parser.items(section)
