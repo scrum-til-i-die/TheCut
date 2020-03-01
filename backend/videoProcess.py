@@ -43,7 +43,7 @@ def uploadImg():
     print ("...images uploaded")
 
 def singleProcess():
-    dict = defaultdict(lambda: 0)
+    resultsDict = defaultdict(lambda: 0)
     client = vision_v1.ImageAnnotatorClient()
 
     imagePaths = [
@@ -66,6 +66,6 @@ def singleProcess():
         output = response.web_detection.web_entities
         for d in output:
             if d.description:
-                dict[d.description] += 1
+                resultsDict[d.description] += 1
 
-    print ("Top 10 results:\n", sorted(dict, key=dict.get, reverse=True)[:10])
+    print ("Top 10 results:\n", sorted(resultsDict, key=resultsDict.get, reverse=True)[:10])
