@@ -4,6 +4,51 @@ import { Container, Header, Left, Body, Right, Button, Icon, Title, Content, Lis
 const axios = require('axios');
 import { apiKey } from 'react-native-dotenv'
 
+class Waiting extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      processing: true,
+      errored: false,
+      finished: false
+      // maybe more
+    }
+  }
+
+  renderWaitingText = (props) => {
+    if (props.processing && !props.errored) {
+      return <Text>The video is being processed.</Text>;
+    } else if (props.errored && !props.processing) {
+      return <Text>There was an error, try again later.</Text>;
+    }
+  }
+
+  render() {
+    const { finished, processing, errored } = this.state;
+    return (
+      <Container>
+        {finished ? (<Results />) : (
+          <Container>
+            <Header>
+              <Left>
+                <Button hasText transparent>
+                  <Text>Back</Text>
+                </Button>
+              </Left>
+              <Body>
+                <Title>Processing</Title>
+              </Body>
+              <Right />
+            </Header>
+            <Content>
+              <this.renderWaitingText processing={processing} errored={errored} />
+            </Content>
+          </Container>)}
+      </Container>
+    );
+  }
+}
+
 class Results extends Component {
   state = {
     movie: 'jurassic park',
@@ -24,15 +69,6 @@ class Results extends Component {
         alert(error);
       });
   }
-
-  loadInBrowser = () => {
-    const homepage = this.state.metadata.homepage;
-    if (homepage) {
-      Linking.openURL(homepage);
-    } else {
-      alert("Homepage does not exists!")
-    }
-  };
 
   render() {
     return (
@@ -104,4 +140,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Results;
+export default Waiting;
