@@ -15,9 +15,11 @@
     "expo": "~36.0.0",
     "expo-camera": "~8.0.0",
     "expo-permissions": "~8.0.0",
+    "form-data": "^3.0.0",
     "react": "~16.9.0",
     "react-dom": "~16.9.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
+    "react-native-camera": "^3.19.0",
     "react-native-dotenv": "^0.2.0",
     "react-native-web": "~0.11.7"
   },
