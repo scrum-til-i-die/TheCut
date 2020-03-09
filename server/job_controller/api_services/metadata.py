@@ -15,12 +15,11 @@ def get_movie_id(movie_name):
     }
     data = requests.get(base_url+'/search/movie', params).json()
     # Check if movie is actually a movie
-    id = -1 if data["results"] else id = data["results"][0]["id"]
-    return id
+    return -1 if not data["results"] else data["results"][0]["id"]
 
 # Get movie metadata from id
-def get_metadata_from_id(movie_id):
+def get_metadata(movie_id):
     params = {
         "api_key": API_KEY,
     }
-    return requests.get(base_url+'/movie/'+str(movie_id), params)
+    return requests.get(base_url+'/movie/'+str(movie_id), params).json()
