@@ -48,4 +48,3 @@ class Job(threading.Thread):
 
         movie_id = x.Result
         DbConnect.job_complete(self.jobId, JobStatus.success, finished_on, movie_id=movie_id)
-        # print("Calling web controller to return results:\n{}".format(result))
