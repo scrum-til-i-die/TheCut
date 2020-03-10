@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
-import { Container, Header, Left, Body, Right, Button, Title, Content, List, ListItem, Text } from 'native-base';
+import { Container, Button, Content, List, ListItem, Text } from 'native-base';
 const axios = require('axios');
 import { apiKey } from 'react-native-dotenv'
-import { AuthSession } from 'expo';
 
 class Results extends Component {
   state = {
