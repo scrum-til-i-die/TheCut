@@ -64,7 +64,7 @@ class RecordingModule extends Component {
   };
 
   render() {
-    const { recording, video } = this.state;
+    const { recording, video, cameraPermission } = this.state;
     const { navigation } = this.props;
 
     console.log("cameraPermission", this.state.cameraPermission);
@@ -92,7 +92,7 @@ class RecordingModule extends Component {
               <TouchableOpacity
                 onPress={function () {
                   navigation.navigate('waitingPage');
-                  this._uploadVideo;
+                  // this._uploadVideo;
                 }}
                 style={{
                   padding: 20,
