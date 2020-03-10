@@ -1,53 +1,9 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Linking } from 'react-native';
-import { Container, Header, Left, Body, Right, Button, Icon, Title, Content, List, ListItem, Text } from 'native-base';
+import { StyleSheet } from 'react-native';
+import { Container, Header, Left, Body, Right, Button, Title, Content, List, ListItem, Text } from 'native-base';
 const axios = require('axios');
 import { apiKey } from 'react-native-dotenv'
-
-class Waiting extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      processing: true,
-      errored: false,
-      finished: false
-      // maybe more
-    }
-  }
-
-  renderWaitingText = (props) => {
-    if (props.processing && !props.errored) {
-      return <Text>The video is being processed.</Text>;
-    } else if (props.errored && !props.processing) {
-      return <Text>There was an error, try again later.</Text>;
-    }
-  }
-
-  render() {
-    const { finished, processing, errored } = this.state;
-    return (
-      <Container>
-        {finished ? (<Results />) : (
-          <Container>
-            <Header>
-              <Left>
-                <Button hasText transparent>
-                  <Text>Back</Text>
-                </Button>
-              </Left>
-              <Body>
-                <Title>Processing</Title>
-              </Body>
-              <Right />
-            </Header>
-            <Content>
-              <this.renderWaitingText processing={processing} errored={errored} />
-            </Content>
-          </Container>)}
-      </Container>
-    );
-  }
-}
+import { AuthSession } from 'expo';
 
 class Results extends Component {
   state = {
@@ -71,20 +27,10 @@ class Results extends Component {
   }
 
   render() {
+    const { navigation } = this.props
+
     return (
       <Container>
-
-        <Header>
-          <Left>
-            <Button hasText transparent>
-              <Text>Back</Text>
-            </Button>
-          </Left>
-          <Body>
-            <Title>Result</Title>
-          </Body>
-          <Right />
-        </Header>
 
         <Content>
           <List>
@@ -124,6 +70,10 @@ class Results extends Component {
           </List>
         </Content>
 
+        <Button block dark onPress={function () { navigation.navigate("recordingModule") }}>
+          <Text>Record Again</Text>
+        </Button>
+
       </Container>
     )
   }
@@ -135,9 +85,11 @@ const styles = StyleSheet.create({
     fontSize: 25,
     padding: 20
   },
-  centerText: {
-    textAlign: 'center'
+  card: {
+    alignItems: 'center',
+    padding: 40,
+    marginTop: 170
   }
 });
 
-export default Waiting;
+export default Results;

@@ -55,6 +55,8 @@ class RecordingModule extends Component {
     this.permissionCheck();
 
     const { recording, video } = this.state;
+    const { navigation } = this.props;
+
     return (
       <Camera
         ref={cam => (this.cam = cam)}
@@ -67,7 +69,12 @@ class RecordingModule extends Component {
       >
         {video && (
           <TouchableOpacity
-            onPress={this._uploadVideo}
+            onPress={function() {
+              navigation.navigate('waitingPage');
+              this._uploadVideo;
+            }
+              
+            }
             style={{
               padding: 20,
               width: "100%",
