@@ -76,18 +76,18 @@ app.get('/getstatus', (req, res) => {
 app.listen(3000, () => console.log("Server started on port 3000"));
 
 function createJob(jobId){
-    return axios.post('http://localhost:5001/create-job', null, { params: {jobId} })
+    return axios.post('http://job-controller:5001/create-job', null, { params: {jobId} })
     .then(response => {
         return true;
     })
-    .catch(response => {
-        // TODO: log error?
+    .catch(error => {
+        console.log(error)
         return false;
     });
 }
 
 function getJob(jobId){
-    return axios.get('http://localhost:5001/get-job', { params: {jobId} })
+    return axios.get('http://job-controller:5001/get-job', { params: {jobId} })
     .then(response => {
         return response.data
     })
