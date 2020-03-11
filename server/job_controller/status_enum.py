@@ -1,5 +1,5 @@
 class JobStatus():
-    pending = 'pending'
+    queued = 'queued'
     running = 'running'
     fail = 'fail'
     success = 'success'

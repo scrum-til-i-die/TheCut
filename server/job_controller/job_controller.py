@@ -6,47 +6,36 @@ from job_db import DbConnect
 app = Flask(__name__)
 api = Api(app)
 
-# class JobController(Resource):
-#     def post(self):
-#         return {"message": "Hello"}
-
-# api.add_resource(JobController, '/')
-
 @app.route('/create-job', methods=['POST'])
 def create_job():
-    jobId = request.args.get('jobId')
+    job_id = request.args.get('jobId')
 
-    x = Job(jobId)
-    x.start()
+    jobIds = DbConnect.get_all_jobid()
 
-    return {
-        "job_id": x.jobId,
-        "status": x.status,
-        "created_on": x.created_on
+    if any(job_id in jobId for jobId in jobIds):
+        result = DbConnect.get_job(job_id)
+    else:
+        x = Job(job_id)
+        x.start()
+        result = {
+            "job_id": x.jobId,
+            "status": x.status,
+            "created_on": x.created_on
         }
+
+    return result
 
 @app.route('/get-job', methods=['GET'])
 def get_job():
     jobId = request.args.get('jobId')
 
-    job = DbConnect.get_job(jobId)
+    result = DbConnect.get_job(jobId)
+    if (result == None):
+        return {
+            "job_id": jobId,
+            "status": "Not Found"
+        }
 
-    job_id = jobId
-    status = job[1]
-    movie_id = job[2]
-    error = job[3]
-    created_on = job[4]
-    finished_on = job[5]
-
-    result = {
-        "job_id": job_id,
-        "status": status,
-        "movie_id": movie_id,
-        "error": error,
-        "created_on": created_on,
-        "finished_on": finished_on
-    }
-        
     return result
 
 if __name__ == "__main__":

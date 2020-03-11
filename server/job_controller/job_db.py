@@ -40,7 +40,7 @@ class DbConnect():
         my_db.commit()
     
     @classmethod 
-    def job_complete(cls, jobId, status, finished_on, movie_id = None, error= None):
+    def complete_job(cls, jobId, status, finished_on, movie_id = None, error= None):
         sql = "UPDATE Jobs Set status = %s, finished_on = %s, movie_id = %s, error_message = %s WHERE job_id = %s"
         val = (status, finished_on, movie_id, error, jobId)
 
@@ -53,9 +53,27 @@ class DbConnect():
         val = (jobId,)
 
         my_cursor.execute(sql, val)
-        result = my_cursor.fetchone()
-        
+        job = my_cursor.fetchone()
         my_db.commit()
+
+        if (job == None):
+            return None
+    
+        job_id = job[0]
+        status = job[1]
+        movie_id = job[2]
+        error = job[3]
+        created_on = job[4]
+        finished_on = job[5]
+
+        result = {
+            "job_id": job_id,
+            "status": status,
+            "movie_id": movie_id,
+            "error": error,
+            "created_on": created_on,
+            "finished_on": finished_on
+        }
 
         return result
 
@@ -66,3 +84,17 @@ class DbConnect():
 
         my_cursor.execute(sql, val)
         my_db.commit()
+
+    @classmethod
+    def get_all_jobid(cls):
+        sql = "SELECT job_id FROM Jobs"
+        
+        my_cursor.execute(sql)
+        results = my_cursor.fetchall()
+        my_db.commit()
+
+        jobIds = []
+        for result in results:
+            jobIds.append(str(result[0]))
+
+        return jobIds
