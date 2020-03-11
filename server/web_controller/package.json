@@ -2,12 +2,12 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "./controller_module/server.js",
+  "main": "./web_controller/server.js",
   "scripts": {
-    "start": "node ./controller_module/server.js",
+    "start": "node ./web_controller/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon ./controller_module/server.js",
-    "startserver": "node ./controller_module/server.js"
+    "dev": "nodemon ./web_controller/server.js",
+    "startserver": "node ./web_controller/server.js"
   },
   "author": "",
   "license": "ISC",

@@ -68,4 +68,4 @@ def singleProcess():
             if d.description:
                 resultsDict[d.description] += 1
 
-    print ("Top 10 results:\n", sorted(resultsDict, key=resultsDict.get, reverse=True)[:10])
+    return ("Top 10 results:\n", sorted(dict, key=dict.get, reverse=True)[:10])

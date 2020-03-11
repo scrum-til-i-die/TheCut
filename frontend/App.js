@@ -2,6 +2,8 @@ import React, { Component, useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as Permissions from 'expo-permissions';
+import api from './src/web';
+import FormData from 'form-data';
 
 class RecordingModule extends Component {
   state = {
@@ -13,7 +15,18 @@ class RecordingModule extends Component {
 
   _uploadVideo = async () => {
     const { video } = this.state;
-    // video.uri
+    const type = 'video/mp4';
+    const uri = video.uri;
+
+    // Form object for video file
+    const data = new FormData();
+    data.append("video", {
+      name: uri,
+      type,
+      uri
+    });
+
+    api.uploadVideo(data);
   };
 
   _StopRecord = async () => {
@@ -27,7 +40,6 @@ class RecordingModule extends Component {
       this.setState({ recording: true }, async () => {
         const video = await this.cam.recordAsync();
         this.setState({ video });
-        console.log(video.uri);
       });
     }
   };
@@ -43,6 +55,7 @@ class RecordingModule extends Component {
   };
 
   _showCamera = async () => {
+    await Permissions.askAsync(Permissions.AUDIO_RECORDING);
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
     if (status === "granted") {
       this.setState({ cameraPermission: true });
