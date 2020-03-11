@@ -11,7 +11,7 @@ api = Api(app)
 
 # api.add_resource(JobController, '/')
 
-@app.route('/run-job', methods=['GET'])
+@app.route('/run-job', methods=['POST'])
 def run_job():
     jobId = request.args.get('jobId')
 

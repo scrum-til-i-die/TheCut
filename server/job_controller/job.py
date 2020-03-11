@@ -15,7 +15,7 @@ class Job(threading.Thread):
         self.failed = False
         threading.Thread.__init__(self)
 
-        DbConnect.insert_new(self.jobId, self.status, self.created_on)
+        DbConnect.create_job(self.jobId, self.status, self.created_on)
 
     # function using _stop function 
     def stop(self): 

@@ -32,17 +32,9 @@ class DbConnect():
 ####################################################
 
     @classmethod
-    def insert_new(cls, jobId, status, created_on):
+    def create_job(cls, jobId, status, created_on):
         sql = "INSERT INTO Jobs (job_id, status, created_on) VALUES (%s, %s, %s)"
         val = (jobId, status, created_on)
-
-        my_cursor.execute(sql, val)
-        my_db.commit()
-
-    @classmethod
-    def update_status(cls, jobId, status):
-        sql = "UPDATE Jobs Set status = %s WHERE job_id = %s"
-        val = (status, jobId)
 
         my_cursor.execute(sql, val)
         my_db.commit()
@@ -55,4 +47,22 @@ class DbConnect():
         my_cursor.execute(sql, val)
         my_db.commit()
 
-    
+    @classmethod
+    def update_status(cls, jobId, status):
+        sql = "UPDATE Jobs Set status = %s WHERE job_id = %s"
+        val = (status, jobId)
+
+        my_cursor.execute(sql, val)
+        my_db.commit()
+
+    @classmethod
+    def get_status(cls, jobId):
+        sql = "SELECT job_id, status, movie_id, error_message, created_on, finished_on FROM Jobs WHERE job_id = %s"
+        val = (jobId,)
+
+        my_cursor.execute(sql, val)
+        result = my_cursor.fetchone()
+        
+        my_db.commit()
+
+        return result
