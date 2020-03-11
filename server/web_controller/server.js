@@ -38,10 +38,10 @@ app.post('/uploadfile', upload.any(), (req, res) => {
     createJob(jobId).then(function(response){
         var success = response;
         sleep.msleep(50);
-        // Dev Error 100: failed to create job.
+
         if (success === false){
             rimraf(`/app/uploads/${jobId}`, function() {});
-            return res.send({
+            return res.status(500).send({
                 status: "Error",
                 message: "Failed to upload video. (Dev Error 100)"
             })
@@ -55,8 +55,22 @@ app.post('/uploadfile', upload.any(), (req, res) => {
             })
         } 
     })
+});
 
-    
+app.get('/getstatus', (req, res) => {
+    var jobId = req.query.jobId;
+
+    getJob(jobId).then(function(response){
+        if (response === null){
+            return res.status(500).send({
+                status: "Error",
+                message: "Failed to get job status. (Dev Error 100)"
+            })
+        }
+        else{
+            return res.send(response);
+        }
+    })
 });
 
 app.listen(3000, () => console.log("Server started on port 3000"));
@@ -64,12 +78,21 @@ app.listen(3000, () => console.log("Server started on port 3000"));
 function createJob(jobId){
     return axios.post('http://localhost:5001/create-job', null, { params: {jobId} })
     .then(response => {
-        // console.log(response.data);
         return true;
     })
     .catch(response => {
         // TODO: log error?
         return false;
-    }
-);
+    });
+}
+
+function getJob(jobId){
+    return axios.get('http://localhost:5001/get-job', { params: {jobId} })
+    .then(response => {
+        return response.data
+    })
+    .catch(response => {
+        // TODO: log error?
+        return null;
+    });
 }
