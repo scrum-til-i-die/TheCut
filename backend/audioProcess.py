@@ -1,13 +1,6 @@
 # This module extracts audio from a video file and process its speech
 import sys, os, io, re
 
-from bs4 import BeautifulSoup
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-
-
 #Imports the MoviePy client library
 from moviepy.editor import *
 
@@ -17,13 +10,23 @@ from google.cloud.speech import enums
 from google.cloud.speech import types
 
 
+# Set up Google Custom Search for identifying movies
+from dotenv import load_dotenv
+import requests
+import collections
+
+load_dotenv()
+API_KEY = os.getenv('CUSTOM_SEARCH_API_KEY')
+CSE_ID = os.getenv('CUSTOM_SEARCH_ID')
+
+base_url = "https://www.googleapis.com/customsearch/v1"
 
 def ExtractAudio(video_path):
-    outputPath = "../audio/Inception_Audio.mp3"
+    fileName = re.search("(.*\/|^)(.*?)\.mp4", video_path).group(2)
+    outputPath = f"../audio/{fileName}.mp3"
     video = VideoFileClip(video_path)
-    # video = VideoFileClip("../videos/InceptionCut.mp4")
     audio = video.audio
-    audio.write_audiofile(outputPath) #TODO: try to find quiet execution of this command
+    audio.write_audiofile(outputPath)
     return outputPath
 
 def GoogleTranscribe(audio_path):
@@ -51,31 +54,29 @@ def GoogleTranscribe(audio_path):
 
     return response.results[0].alternatives[0].transcript
 
-    # print('Transcript: {}'.format(response.results[0].alternatives[0].transcript))
-    
-
 def TranscribeAudio(video_path):
     audio_path = ExtractAudio(video_path)
     transcribed_audio = GoogleTranscribe(audio_path)
     transcribed_sentences = re.split('; |\? |\.', transcribed_audio)
-    return transcribed_senteces
+    return transcribed_sentences
 
-def IdentifyMovie(quote11):
-    driver = webdriver.Chrome()
-    driver.get("http://www.quodb.com/search/" + quote)
-    try:
-        element = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, "title"))
-        )
+def IdentifyMovie(quote):
+    params = {
+        "cx": CSE_ID,
+        "key": API_KEY,
+        "q": quote,
+    }
+    
+    data = requests.get(base_url, params).json()
+    regex = lambda x : re.search("^(.*) \(.*?$", x).group(1)
+    return -1 if "items" not in data else regex(data["items"][0]["title"])
 
-        soup = BeautifulSoup(driver.page_source)
-    finally:
-        driver.quit()
+# returns dictionary of
+# { MovieName: Percentage of Results matching }
+def CountMovies(quotes):
+    movieCount = collections.defaultdict(int)
+    num = len(quotes)
+    movieResults = map(IdentifyMovie, quotes)
+    for movie in movieResults: movieCount[movie] += 1/num
 
-    soup_movies = soup.find_all("small", class_="title")
-    string_movies = [str(movie) for movie in soup_movies]
-
-    regex = lambda x : re.search("\>(.*?)\<", x).group(1)
-    movies = [regex(movie) for movie in string_movies]
-    return movies
-
+    return movieCount
