@@ -12,8 +12,8 @@ from google.cloud.speech import types
 
 # Set up Google Custom Search for identifying movies
 from dotenv import load_dotenv
+from collections import defaultdict
 import requests
-import collections
 
 load_dotenv()
 API_KEY = os.getenv('CUSTOM_SEARCH_API_KEY')
@@ -21,14 +21,14 @@ CSE_ID = os.getenv('CUSTOM_SEARCH_ID')
 
 base_url = "https://www.googleapis.com/customsearch/v1"
 
-def ExtractAudio(video_path):
+def __ExtractAudio(video_path):
     outputPath = video_path[:-1]+"3"
     video = VideoFileClip(video_path)
     audio = video.audio
     audio.write_audiofile(outputPath)
     return outputPath
 
-def GoogleTranscribe(audio_path):
+def __GoogleTranscribe(audio_path):
     # Instantiates a client
     client = speech.SpeechClient()
 
@@ -53,31 +53,38 @@ def GoogleTranscribe(audio_path):
 
     return response.results[0].alternatives[0].transcript
 
-def TranscribeAudio(job_id):
-    video_path = '/app/uploads/{}/{}.mp4'.format(job_id, job_id)
-    print (video_path)
+def __TranscribeAudio(job_id):
+    video_path = f"/app/uploads/{job_id}/{job_id}.mp4"
     audio_path = ExtractAudio(video_path)
     transcribed_audio = GoogleTranscribe(audio_path)
     transcribed_sentences = re.split('; |\? |\.', transcribed_audio)
     return transcribed_sentences
 
-def IdentifyMovie(quote):
+def __IdentifyMovie(quote):
     params = {
         "cx": CSE_ID,
         "key": API_KEY,
         "q": quote,
+        "num": 1
     }
     
     data = requests.get(base_url, params).json()
     regex = lambda x : re.search("^(.*) \(.*?$", x).group(1)
-    return -1 if "items" not in data else regex(data["items"][0]["title"])
+    if "items" in data: return regex(data["items"][0]["title"])
 
 # returns dictionary of
 # { MovieName: Percentage of Results matching }
-def CountMovies(quotes):
-    movieCount = collections.defaultdict(int)
+def __CountMovies(quotes):
+    movieCount = defaultdict(int)
     num = len(quotes)
+    
     movieResults = map(IdentifyMovie, quotes)
-    for movie in movieResults: movieCount[movie] += 1/num
+    for movie in movieResults: movieCount[movie] += 1
 
-    return movieCount
+    movieCount = sorted(movieCount.items(),key=lambda ms: ms[1], reverse=True)[:10]
+    
+    return {k:v/num for k,v in movieCount}
+
+
+def AudioProcess(job_id):
+    return CountMovies(TranscribeAudio(job_id))
