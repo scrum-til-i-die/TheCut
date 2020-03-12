@@ -3,6 +3,9 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 const uuid = require('uuid');
 const fs = require('fs');
+const axios = require('axios');
+const rimraf = require("rimraf");
+const sleep = require('sleep');
 
 const uploadPath = '/app/uploads/'
 var fileName = '';
@@ -32,12 +35,64 @@ app.post('/uploadfile', upload.any(), (req, res) => {
     var fileName = file.originalname;
     var jobId = file.filename.split(".")[0];
 
-    return res.send({
-        status: "File Received",
-        file_name: fileName,
-        job_id: jobId,
-        created_on: Date.now()
+    createJob(jobId).then(function(response){
+        var success = response;
+        sleep.msleep(100);
+
+        if (success === false){
+            rimraf(`/app/uploads/${jobId}`, function() {});
+            return res.status(500).send({
+                status: "Error",
+                message: "Failed to upload video. (Dev Error 100)"
+            })
+        }
+        else{
+            return res.send({
+                status: "File Received",
+                file_name: fileName,
+                job_id: jobId,
+                created_on: Date.now()
+            })
+        } 
+    })
+});
+
+app.get('/getstatus', (req, res) => {
+    var jobId = req.query.jobId;
+
+    getJob(jobId).then(function(response){
+        if (response === null){
+            return res.status(500).send({
+                status: "Error",
+                message: "Failed to get job status. (Dev Error 100)"
+            })
+        }
+        else{
+            return res.send(response);
+        }
     })
 });
 
 app.listen(3000, () => console.log("Server started on port 3000"));
+
+function createJob(jobId){
+    return axios.post('http://job-controller:5001/create-job', null, { params: {jobId} })
+    .then(response => {
+        return true;
+    })
+    .catch(error => {
+        console.log(error)
+        return false;
+    });
+}
+
+function getJob(jobId){
+    return axios.get('http://job-controller:5001/get-job', { params: {jobId} })
+    .then(response => {
+        return response.data
+    })
+    .catch(response => {
+        // TODO: log error?
+        return null;
+    });
+}

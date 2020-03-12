@@ -9,13 +9,13 @@ class Job(threading.Thread):
 
     def __init__(self, jobId): 
         self.jobId = jobId
-        self.status = JobStatus.pending
+        self.status = JobStatus.queued
         self.created_on = datetime.datetime.now()
         self._stop = threading.Event() 
         self.failed = False
         threading.Thread.__init__(self)
 
-        DbConnect.insert_new(self.jobId, self.status, self.created_on)
+        DbConnect.create_job(self.jobId, self.status, self.created_on)
 
     # function using _stop function 
     def stop(self): 
@@ -47,4 +47,4 @@ class Job(threading.Thread):
             return
 
         movie_id = x.Result
-        DbConnect.job_complete(self.jobId, JobStatus.success, finished_on, movie_id=movie_id)
+        DbConnect.complete_job(self.jobId, JobStatus.success, finished_on, movie_id=movie_id)

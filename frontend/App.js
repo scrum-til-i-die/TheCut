@@ -1,123 +1,23 @@
-import React, { Component, useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import { Camera } from 'expo-camera';
-import * as Permissions from 'expo-permissions';
-import api from './src/web';
-import FormData from 'form-data';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
-class RecordingModule extends Component {
-  state = {
-    video: null,
-    picture: null,
-    recording: false,
-    cameraPermission: false
-  };
+import recordingModule from './recordingModule';
+import waitingPage from './waitingPage';
+import resultsPage from './resultsPage';
 
-  _uploadVideo = async () => {
-    const { video } = this.state;
-    const type = 'video/mp4';
-    const uri = video.uri;
+const Stack = createStackNavigator();
 
-    // Form object for video file
-    const data = new FormData();
-    data.append("video", {
-      name: uri,
-      type,
-      uri
-    });
-
-    api.uploadVideo(data);
-  };
-
-  _StopRecord = async () => {
-    this.setState({ recording: false }, () => {
-      this.cam.stopRecording();
-    });
-  };
-
-  _StartRecord = async () => {
-    if (this.cam) {
-      this.setState({ recording: true }, async () => {
-        const video = await this.cam.recordAsync();
-        this.setState({ video });
-      });
-    }
-  };
-
-  toogleRecord = () => {
-    const { recording } = this.state;
-
-    if (recording) {
-      this._StopRecord();
-    } else {
-      this._StartRecord();
-    }
-  };
-
-  _showCamera = async () => {
-    await Permissions.askAsync(Permissions.AUDIO_RECORDING);
-    const { status } = await Permissions.askAsync(Permissions.CAMERA);
-    if (status === "granted") {
-      this.setState({ cameraPermission: true });
-    } else {
-      return <Text>No access to camera</Text>;
-    }
-  };
-
+export default class App extends React.Component {
   render() {
-    const { recording, video, cameraPermission } = this.state;
-    console.log("cameraPermission", this.state.cameraPermission);
     return (
-      <View
-        style={{
-          justifyContent: "center",
-          alignItems: "center",
-          flex: 1,
-          width: "100%"
-        }}
-      >
-        {cameraPermission ? (
-          <Camera
-            ref={cam => (this.cam = cam)}
-            style={{
-              justifyContent: "flex-end",
-              alignItems: "center",
-              flex: 1,
-              width: "100%"
-            }}
-          >
-            {video && (
-              <TouchableOpacity
-                onPress={this._uploadVideo}
-                style={{
-                  padding: 20,
-                  width: "100%",
-                  backgroundColor: "#fff"
-                }}
-              >
-                <Text style={{ textAlign: "center" }}>Upload</Text>
-              </TouchableOpacity>
-            )}
-            <TouchableOpacity
-              onPress={this.toogleRecord}
-              style={{
-                padding: 20,
-                width: "100%",
-                backgroundColor: recording ? "#ef4f84" : "#4fef97"
-              }}
-            >
-              <Text style={{ textAlign: "center" }}>
-                {recording ? "Stop" : "Record"}
-              </Text>
-            </TouchableOpacity>
-          </Camera>) : (
-            <TouchableOpacity onPress={this._showCamera}>
-              <Text> Record </Text>
-            </TouchableOpacity>
-          )}
-      </View>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Results">
+          <Stack.Screen name="recordingModule" component={recordingModule} options={{ title: 'Record' }} />
+          <Stack.Screen name="waitingPage" component={waitingPage} options={{ title: 'Processing' }} />
+          <Stack.Screen name="resultsPage" component={resultsPage} options={{ title: 'Results' }} />
+        </Stack.Navigator>
+      </NavigationContainer>
     );
   }
 }
-
-export default RecordingModule;
