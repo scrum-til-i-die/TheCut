@@ -1,5 +1,6 @@
 import os
 import time
+import datetime
 from configparser import ConfigParser
 from mysql.connector import MySQLConnection, Error, pooling
 
@@ -35,6 +36,7 @@ class DbConnect():
 
             cursor = db.cursor()
             cursor.execute(sql, val)
+            db.commit()
         except Error as e:
             # log some error
             print ("error")
@@ -52,6 +54,7 @@ class DbConnect():
             
             cursor = db.cursor()
             cursor.execute(sql, val)
+            db.commit()
         except Error as e:
             # log some error
             print ("error")
@@ -102,6 +105,7 @@ class DbConnect():
 
             cursor = db.cursor()
             cursor.execute(sql, val)
+            db.commit()
         except Error as e:
             # log some error
             print ("error")
@@ -135,23 +139,27 @@ class DbConnect():
                 db.close()
 
     @classmethod
-    def create_moviemetadata(cls, movieId, title, poster_path, genres, overview, actors, runtime):
+    def create_moviemetadata(cls, movieId, title, posterPath, genres, overview, actors, runtime):
         db = cls.get_db_connection()
         try:
             sql = ('INSERT INTO Movie_Metadata '
-                    '(movie_id, title, poster_path, genres, overview, actors, runtime) '
-                    'VALUES (%s, %s, %s, %s, %s, %s, %s)')
-            val = (movieId, title, poster_path, genres, overview, actors, runtime)
+                    '(movie_id, title, poster_path, genres, overview, actors, runtime, last_requested) '
+                    'VALUES (%s, %s, %s, %s, %s, %s, %s, %s)')
+            lastRequested = str(datetime.datetime.now())
+            val = (movieId, title, posterPath, genres, overview, actors, runtime, lastRequested)
 
             cursor = db.cursor()
             cursor.execute(sql, val)
+            db.commit()
         except Error as e:
             # log some error
             print (e)
+            return False
         finally:
             if db.is_connected():
                 cursor.close()
                 db.close()
+                return True
 
     @classmethod
     def get_moviemetadata(cls, movieId):
@@ -164,6 +172,24 @@ class DbConnect():
 
             cursor = db.cursor()
             cursor.execute(sql, val)
+            movie_metadata = cursor.fetchone()
+
+            if (movie_metadata == None):
+                return None
+
+            movie_metadata = {
+                'movie_id': movie_metadata[0],
+                'title': movie_metadata[1],
+                'poster_path': movie_metadata[2],
+                'genres': movie_metadata[3],
+                'overview': movie_metadata[4],
+                'actors': movie_metadata[5],
+                'runtime': movie_metadata[6]
+            }
+
+            print(cls.update_moviemetadata_ts(movieId))
+
+            return movie_metadata
         except Error as e:
             # log some error
             print (e)
@@ -176,19 +202,45 @@ class DbConnect():
     def remove_moviemetadata(cls, movieId):
         db = cls.get_db_connection()
         try:
-            sql = ('DELETE FROM Movie_Metadata'
+            sql = ('DELETE FROM Movie_Metadata '
                     'WHERE movie_id = %s')
             val = (movieId,)
 
             cursor = db.cursor()
             cursor.execute(sql, val)
+            db.commit()
         except Error as e:
             # log some error
             print (e)
+            return False
         finally:
             if db.is_connected():
                 cursor.close()
                 db.close()
+                return True
+
+    @classmethod
+    def update_moviemetadata_ts(cls, movieId):
+        db = cls.get_db_connection()
+        try:
+            sql = ('UPDATE Movie_Metadata '
+                    'SET last_requested = %s '
+                    'WHERE movie_id = %s')
+            lastRequested = str(datetime.datetime.now())
+            val = (lastRequested, movieId)
+
+            cursor = db.cursor()
+            cursor.execute(sql, val)
+            db.commit()
+        except Error as e:
+            # log some error
+            print (e)
+            return False
+        finally:
+            if db.is_connected():
+                cursor.close()
+                db.close()
+                return True
 
     @classmethod
     def get_db_connection(cls):
