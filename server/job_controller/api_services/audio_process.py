@@ -22,8 +22,7 @@ CSE_ID = os.getenv('CUSTOM_SEARCH_ID')
 base_url = "https://www.googleapis.com/customsearch/v1"
 
 def ExtractAudio(video_path):
-    fileName = re.search("(.*\/|^)(.*?)\.mp4", video_path).group(2)
-    outputPath = f"../audio/{fileName}.mp3"
+    outputPath = video_path[:-1]+"3"
     video = VideoFileClip(video_path)
     audio = video.audio
     audio.write_audiofile(outputPath)
