@@ -7,7 +7,7 @@ from collections import defaultdict
 
 def SplitVideo(job_id):
     # Base Path for job
-    job_path = "/home/suhavi/app/uploads/" + job_id
+    job_path = "/app/uploads/" + job_id
 
     # Video
     video = cv2.VideoCapture(job_path+"/" + job_id + ".mp4")
@@ -41,7 +41,7 @@ def SplitVideo(job_id):
 
 def AnnotateFrames(job_id):
     # Base Path for job
-    job_path = "/home/suhavi/app/uploads/" + job_id
+    job_path = "/app/uploads/" + job_id
 
     resultsDict = defaultdict(lambda: 0)
 
