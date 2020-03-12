@@ -5,8 +5,6 @@ from mysql.connector import MySQLConnection, Error, pooling
 
 class DbConnect():
     global db_pool
-    
-    # Configuration
     filename = '/app/secrets/config.ini'
     section = 'mysql'
     parser = ConfigParser()
@@ -22,7 +20,6 @@ class DbConnect():
             db_config[item[0]] = item[1]
     else:
         raise Exception('{0} not found in the {1} file'.format(section, filename))
-
 
     db_pool = pooling.MySQLConnectionPool(pool_name="pynative_pool",
                                                             pool_size=5,
@@ -67,7 +64,8 @@ class DbConnect():
     def get_job(cls, jobId):
         db = cls.get_db_connection()
         try:
-            sql = "SELECT job_id, status, movie_id, error_message, created_on, finished_on FROM Jobs WHERE job_id = %s"
+            sql = ('SELECT job_id, status, movie_id, error_message, created_on, finished_on '
+                    'FROM Jobs WHERE job_id = %s')
             val = (jobId,)
 
             cursor = db.cursor()
@@ -116,7 +114,8 @@ class DbConnect():
     def get_all_jobid(cls):
         db = cls.get_db_connection()
         try:
-            sql = "SELECT job_id FROM Jobs"
+            sql = ('SELECT job_id '
+                    'FROM Jobs')
             
             cursor = db.cursor()
             cursor.execute(sql)
@@ -130,6 +129,62 @@ class DbConnect():
         except Error as e:
             # log error
             print("Error")
+        finally:
+            if db.is_connected():
+                cursor.close()
+                db.close()
+
+    @classmethod
+    def create_moviemetadata(cls, movieId, title, poster_path, genres, overview, actors, runtime):
+        db = cls.get_db_connection()
+        try:
+            sql = ('INSERT INTO Movie_Metadata '
+                    '(movie_id, title, poster_path, genres, overview, actors, runtime) '
+                    'VALUES (%s, %s, %s, %s, %s, %s, %s)')
+            val = (movieId, title, poster_path, genres, overview, actors, runtime)
+
+            cursor = db.cursor()
+            cursor.execute(sql, val)
+        except Error as e:
+            # log some error
+            print (e)
+        finally:
+            if db.is_connected():
+                cursor.close()
+                db.close()
+
+    @classmethod
+    def get_moviemetadata(cls, movieId):
+        db = cls.get_db_connection()
+        try:
+            sql = ('SELECT movie_id, title, poster_path, genres, overview, actors, runtime '
+                    'FROM Movie_Metadata '
+                    'WHERE movie_id = %s')
+            val = (movieId,)
+
+            cursor = db.cursor()
+            cursor.execute(sql, val)
+        except Error as e:
+            # log some error
+            print (e)
+        finally:
+            if db.is_connected():
+                cursor.close()
+                db.close()
+
+    @classmethod
+    def remove_moviemetadata(cls, movieId):
+        db = cls.get_db_connection()
+        try:
+            sql = ('DELETE FROM Movie_Metadata'
+                    'WHERE movie_id = %s')
+            val = (movieId,)
+
+            cursor = db.cursor()
+            cursor.execute(sql, val)
+        except Error as e:
+            # log some error
+            print (e)
         finally:
             if db.is_connected():
                 cursor.close()
