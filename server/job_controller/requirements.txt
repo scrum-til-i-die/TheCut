@@ -5,5 +5,4 @@ configparser
 python-dotenv
 google-api-python-client
 requests
-collections
 opencv-python

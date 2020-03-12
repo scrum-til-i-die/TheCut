@@ -53,7 +53,9 @@ def GoogleTranscribe(audio_path):
 
     return response.results[0].alternatives[0].transcript
 
-def TranscribeAudio(video_path):
+def TranscribeAudio(job_id):
+    video_path = '/app/uploads/{}/{}.mp4'.format(job_id, job_id)
+    print (video_path)
     audio_path = ExtractAudio(video_path)
     transcribed_audio = GoogleTranscribe(audio_path)
     transcribed_sentences = re.split('; |\? |\.', transcribed_audio)
