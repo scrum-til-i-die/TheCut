@@ -77,20 +77,13 @@ class DbConnect():
             if (job == None):
                 return None
         
-            job_id = job[0]
-            status = job[1]
-            movie_id = job[2]
-            error = job[3]
-            created_on = job[4]
-            finished_on = job[5]
-
             result = {
-                "job_id": job_id,
-                "status": status,
-                "movie_id": movie_id,
-                "error": error,
-                "created_on": created_on,
-                "finished_on": finished_on
+                "job_id": job[0],
+                "status": job[1],
+                "movie_id": job[2],
+                "error": job[3],
+                "created_on": job[4],
+                "finished_on": job[5]
             }
 
             return result
