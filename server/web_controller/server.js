@@ -37,7 +37,7 @@ app.post('/uploadfile', upload.any(), (req, res) => {
 
     createJob(jobId).then(function(response){
         var success = response;
-        sleep.msleep(50);
+        sleep.msleep(100);
 
         if (success === false){
             rimraf(`/app/uploads/${jobId}`, function() {});
