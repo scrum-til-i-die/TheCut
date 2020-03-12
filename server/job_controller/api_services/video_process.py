@@ -1,32 +1,35 @@
 # This module will take a video input and extract frames
-
-import cv2, os
-import shutil
+import cv2, os, io
 from google.cloud import vision_v1
+from google.cloud.vision import types
 from collections import defaultdict
 
-def SplitVideo(video_path):
+
+def SplitVideo(job_id):
+    # Base Path for job
+    job_path = "/home/suhavi/app/uploads/" + job_id
 
     # Video
-    video = cv2.VideoCapture(video_path)
+    video = cv2.VideoCapture(job_path+"/" + job_id + ".mp4")
 
     # Used to count number of frames
     frame_count = 0
 
-    # Used to check if fram extraction worked
-    success = True
+    # create images directory
+    os.mkdir(f"{job_path}/images")
 
+    # Used to check if frame extraction worked
+    success = True
     while success:
-        # Read from teh video object
+        # Read from the video object
         success, image = video.read()
 
         # Save the frame with frame count every 20 frames
         if frame_count % 200 == 0:
-            cv2.imwrite("images/frame-%d.jpg" % frame_count, image)
+            cv2.imwrite(f"{job_path}/images/frame-{frame_count}.jpg", image)
 
         # increment frame_count
         frame_count += 1
-    print ("...video splitted into images")
 
 # def zipImg():
 #     shutil.make_archive('imageZip', 'zip', '../images')
@@ -36,36 +39,48 @@ def SplitVideo(video_path):
 #     shutil.unpack_archive('imageZip.zip', extract_dir='../images')
 #     return
 
-def uploadImg():
-    # os.system("gsutil cp ./imageZip.zip gs://the-cut-test-bucket")
-    for file in os.listdir("../images/"):
-        os.system(f"gsutil cp ../images/{file} gs://the-cut-test-bucket")
-    print ("...images uploaded")
+def AnnotateFrames(job_id):
+    # Base Path for job
+    job_path = "/home/suhavi/app/uploads/" + job_id
 
-def singleProcess():
     dict = defaultdict(lambda: 0)
+
     client = vision_v1.ImageAnnotatorClient()
 
-    imagePaths = [
-        'gs://the-cut-test-bucket/frame-0.jpg',
-        'gs://the-cut-test-bucket/frame-200.jpg',
-        'gs://the-cut-test-bucket/frame-400.jpg',
-        'gs://the-cut-test-bucket/frame-600.jpg',
-        'gs://the-cut-test-bucket/frame-800.jpg',
-        'gs://the-cut-test-bucket/frame-1000.jpg'
-    ]
+    i = 0 # Keep track of how many frames have been analyzed
+    for file in os.listdir(f"{job_path}/images/"):
+        if i == 5:
+            break
+        i += 1
+        
+        file_name = f"{job_path}/images/{file}"
 
-    for i in range(5):
+        # open file and read contents
+        with io.open(file_name, 'rb') as image_file:
+            content = image_file.read()
+        
+        # save contents to a google image object
+        image = types.Image(content = content)
+
+        # perform web detection
         response = client.annotate_image(
             {
-                'image': {'source': {'image_uri': imagePaths[i]}},
-                'features': [{'type': vision_v1.enums.Feature.Type.WEB_DETECTION}]
+                'image': image,
+                'features': [{
+                    'type': vision_v1.enums.Feature.Type.WEB_DETECTION,
+                }]
             }
         )
 
+        # throw result in dictionary
         output = response.web_detection.web_entities
         for d in output:
             if d.description:
                 dict[d.description] += 1
+    # compute percentages and order
+    return {k: v/i for k, v in sorted(dict.items(), key=lambda item: (item[1]), reverse=True)}
 
-    return ("Top 10 results:\n", sorted(dict, key=dict.get, reverse=True)[:10])
+# Wrapper to run all methods
+def VideoProcess(job_id):
+    SplitVideo(job_id)
+    return AnnotateFrames(job_id)
