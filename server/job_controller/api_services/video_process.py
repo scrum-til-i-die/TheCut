@@ -47,12 +47,8 @@ def AnnotateFrames(job_id):
 
     client = vision_v1.ImageAnnotatorClient()
 
-    i = 0 # Keep track of how many frames have been analyzed
-    for file in os.listdir(f"{job_path}/images/"):
-        if i == 5:
-            break
-        i += 1
-        
+    for file in os.listdir(f"{job_path}/images/")[:5]:
+
         file_name = f"{job_path}/images/{file}"
 
         # open file and read contents
@@ -78,7 +74,7 @@ def AnnotateFrames(job_id):
             if d.description:
                 resultsDict[d.description] += 1
     # compute percentages and order
-    return {k: v/i for k, v in sorted(resultsDict.items(), key=lambda item: (item[1]), reverse=True)}
+    return {k: v/5 for k, v in sorted(resultsDict.items(), key=lambda item: (item[1]), reverse=True)}
 
 # Wrapper to run all methods
 def VideoProcess(job_id):
