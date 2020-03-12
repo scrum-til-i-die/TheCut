@@ -88,5 +88,3 @@ def __CountMovies(quotes):
 
 def AudioProcess(job_id):
     return __CountMovies(__TranscribeAudio(job_id))
-
-print(AudioProcess("Inception"))
