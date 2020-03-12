@@ -1,8 +1,10 @@
 flask
-mysql.connector
 flask_restful
+mysql.connector
 configparser
-python-dotenv
 google-api-python-client
+google-cloud-speech
 requests
+python-dotenv
 opencv-python
+moviepy

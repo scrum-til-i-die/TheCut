@@ -55,8 +55,8 @@ def __GoogleTranscribe(audio_path):
 
 def __TranscribeAudio(job_id):
     video_path = f"/app/uploads/{job_id}/{job_id}.mp4"
-    audio_path = ExtractAudio(video_path)
-    transcribed_audio = GoogleTranscribe(audio_path)
+    audio_path = __ExtractAudio(video_path)
+    transcribed_audio = __GoogleTranscribe(audio_path)
     transcribed_sentences = re.split('; |\? |\.', transcribed_audio)
     return transcribed_sentences
 
@@ -78,7 +78,7 @@ def __CountMovies(quotes):
     movieCount = defaultdict(int)
     num = len(quotes)
     
-    movieResults = map(IdentifyMovie, quotes)
+    movieResults = map(__IdentifyMovie, quotes)
     for movie in movieResults: movieCount[movie] += 1
 
     movieCount = sorted(movieCount.items(),key=lambda ms: ms[1], reverse=True)[:10]
@@ -87,4 +87,6 @@ def __CountMovies(quotes):
 
 
 def AudioProcess(job_id):
-    return CountMovies(TranscribeAudio(job_id))
+    return __CountMovies(__TranscribeAudio(job_id))
+
+print(AudioProcess("Inception"))
