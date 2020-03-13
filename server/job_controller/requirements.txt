@@ -1,6 +1,6 @@
 flask
 flask_restful
-mysql.connector
+mysql-connector
 configparser
 google-api-python-client
 google-cloud-speech
