@@ -21,6 +21,7 @@ var storage = multer.diskStorage({
         fs.mkdir(dirName, function(err){
             if(err) throw err;
         });
+        sleep.msleep(100);
         cb(null, dirName)
     },
     filename: function(req, file, cb){
@@ -37,7 +38,7 @@ app.post('/uploadfile', upload.any(), (req, res) => {
 
     createJob(jobId).then(function(response){
         var success = response;
-        sleep.msleep(100);
+        
 
         if (success === false){
             rimraf(`/app/uploads/${jobId}`, function() {});
