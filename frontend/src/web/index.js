@@ -16,6 +16,15 @@ export default {
     },
     // Retrieves results from API for specific uuid
     getResults(id) {
-        return api.get(id);
+        return api.get(
+            '/getstatus',
+            id
+        )
+        .then(function (response) {
+            console.log(response);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
     }
 }
