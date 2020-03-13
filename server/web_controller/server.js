@@ -57,7 +57,7 @@ app.post('/uploadfile', upload.any(), (req, res) => {
     })
 });
 
-app.get('/getstatus', (req, res) => {
+app.get('/status', (req, res) => {
     var jobId = req.query.jobId;
 
     getJob(jobId).then(function(response){
@@ -87,7 +87,7 @@ function createJob(jobId){
 }
 
 function getJob(jobId){
-    return axios.get('http://job-controller:5001/get-job', { params: {jobId} })
+    return axios.get('http://job-controller:5001/job', { params: {jobId} })
     .then(response => {
         return response.data
     })

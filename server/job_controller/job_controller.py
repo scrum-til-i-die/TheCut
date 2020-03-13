@@ -25,7 +25,7 @@ def create_job():
 
     return result
 
-@app.route('/get-job', methods=['GET'])
+@app.route('/job', methods=['GET'])
 def get_job():
     jobId = request.args.get('jobId')
 
