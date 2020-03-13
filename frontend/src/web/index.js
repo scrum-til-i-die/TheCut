@@ -17,8 +17,12 @@ export default {
     // Retrieves results from API for specific uuid
     getResults(id) {
         return api.get(
-            '/getstatus',
-            id
+            '/status',
+            {
+                params: {
+                  jobID: id
+                }
+            }
         )
         .then(function (response) {
             console.log(response);
