@@ -47,7 +47,7 @@ class DbConnect():
         
     @classmethod 
     def complete_job(cls, jobId, status, finished_on, movie_id = None, error= None):
-        db = cls.____get_db_connection()
+        db = cls.__get_db_connection()
         try:
             sql = "UPDATE Jobs Set status = %s, finished_on = %s, movie_id = %s, error_message = %s WHERE job_id = %s"
             val = (status, finished_on, movie_id, error, jobId)
