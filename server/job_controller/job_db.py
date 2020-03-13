@@ -65,7 +65,7 @@ class DbConnect():
         
     @classmethod
     def get_job(cls, jobId):
-        db = cls.____get_db_connection()
+        db = cls.__get_db_connection()
         try:
             sql = ('SELECT job_id, status, movie_id, error_message, created_on, finished_on '
                     'FROM Jobs WHERE job_id = %s')
