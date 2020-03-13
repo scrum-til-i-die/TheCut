@@ -29,7 +29,7 @@ class DbConnect():
 
     @classmethod
     def create_job(cls, jobId, status, created_on):
-        db = cls.get_db_connection()
+        db = cls.__get_db_connection()
         try:
             sql = "INSERT INTO Jobs (job_id, status, created_on) VALUES (%s, %s, %s)"
             val = (jobId, status, created_on)
@@ -47,7 +47,7 @@ class DbConnect():
         
     @classmethod 
     def complete_job(cls, jobId, status, finished_on, movie_id = None, error= None):
-        db = cls.get_db_connection()
+        db = cls.____get_db_connection()
         try:
             sql = "UPDATE Jobs Set status = %s, finished_on = %s, movie_id = %s, error_message = %s WHERE job_id = %s"
             val = (status, finished_on, movie_id, error, jobId)
@@ -65,7 +65,7 @@ class DbConnect():
         
     @classmethod
     def get_job(cls, jobId):
-        db = cls.get_db_connection()
+        db = cls.____get_db_connection()
         try:
             sql = ('SELECT job_id, status, movie_id, error_message, created_on, finished_on '
                     'FROM Jobs WHERE job_id = %s')
@@ -98,7 +98,7 @@ class DbConnect():
 
     @classmethod
     def update_status(cls, jobId, status):
-        db = cls.get_db_connection()
+        db = cls.__get_db_connection()
         try:
             sql = "UPDATE Jobs Set status = %s WHERE job_id = %s"
             val = (status, jobId)
@@ -116,7 +116,7 @@ class DbConnect():
 
     @classmethod
     def get_all_jobid(cls):
-        db = cls.get_db_connection()
+        db = cls.__get_db_connection()
         try:
             sql = ('SELECT job_id '
                     'FROM Jobs')
@@ -140,7 +140,7 @@ class DbConnect():
 
     @classmethod
     def create_moviemetadata(cls, movieId, title, posterPath, genres, overview, actors, runtime):
-        db = cls.get_db_connection()
+        db = cls.__get_db_connection()
         try:
             sql = ('INSERT INTO Movie_Metadata '
                     '(movie_id, title, poster_path, genres, overview, actors, runtime, last_requested) '
@@ -162,8 +162,20 @@ class DbConnect():
                 return True
 
     @classmethod
+    def create_moviemetadata_fromobj(cls, movie_metadata):
+        movieId = movie_metadata['movie_id']
+        title = movie_metadata['title']
+        posterPath = movie_metadata['poster_path']
+        genres = movie_metadata['genres']
+        overview = movie_metadata['overview']
+        actors = movie_metadata['actors']
+        runtime = movie_metadata['runtime']
+
+        return cls.create_moviemetadata(movieId, title, posterPath, genres, overview, actors, runtime)
+
+    @classmethod
     def get_moviemetadata(cls, movieId):
-        db = cls.get_db_connection()
+        db = cls.__get_db_connection()
         try:
             sql = ('SELECT movie_id, title, poster_path, genres, overview, actors, runtime '
                     'FROM Movie_Metadata '
@@ -200,7 +212,7 @@ class DbConnect():
 
     @classmethod
     def remove_moviemetadata(cls, movieId):
-        db = cls.get_db_connection()
+        db = cls.__get_db_connection()
         try:
             sql = ('DELETE FROM Movie_Metadata '
                     'WHERE movie_id = %s')
@@ -221,7 +233,7 @@ class DbConnect():
 
     @classmethod
     def update_moviemetadata_ts(cls, movieId):
-        db = cls.get_db_connection()
+        db = cls.__get_db_connection()
         try:
             sql = ('UPDATE Movie_Metadata '
                     'SET last_requested = %s '
@@ -243,7 +255,7 @@ class DbConnect():
                 return True
 
     @classmethod
-    def get_db_connection(cls):
+    def __get_db_connection(cls):
         while(True):
             try:
                 db_connect = db_pool.get_connection()
