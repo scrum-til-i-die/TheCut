@@ -22,4 +22,17 @@ def get_metadata(movie_id):
     params = {
         "api_key": API_KEY,
     }
-    return requests.get(base_url+'/movie/'+str(movie_id), params).json()
+    full_metadata = requests.get(base_url+'/movie/'+str(movie_id), params).json()
+
+    separator = ', '
+    movie_metadata = {
+        'movie_id': full_metadata['id'],
+        'title': full_metadata['original_title'],
+        'poster_path': full_metadata['poster_path'],
+        'genres': separator.join([genre['name'] for genre in full_metadata['genres']]),
+        'overview': full_metadata['overview'],
+        'actors': separator.join(['']),
+        'runtime': full_metadata['runtime']
+    }
+
+    return movie_metadata
