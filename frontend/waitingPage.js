@@ -6,10 +6,10 @@ class Waiting extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      processing: true,
+      processing: false,
       processingAfter10: false,
       errored: false,
-      finished: false,
+      finished: true,
     }
   }
 
@@ -34,13 +34,13 @@ class Waiting extends Component {
       return (
         <View style={styles.card}>
           <Text style={{ fontSize: 20 }}>
-            Sorry, we cannot generate a result right now. Please wait as we continue processing you video.
+            Sorry, we cannot generate a result right now. Please wait as we continue processing your video.
           </Text>
           <Spinner />
           <Button>
             <Text
               onPress={function () {
-                navigation.navigate('recordingModule');
+                navigation.push('recordingModule'); // navigate regardless of the existing nav history
               }}>
               Cancel
             </Text>

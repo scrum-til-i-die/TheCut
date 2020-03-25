@@ -1,5 +1,6 @@
 import React, { Component, useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
+import { Text, Button } from 'native-base';
 import { Camera } from 'expo-camera';
 import * as Permissions from 'expo-permissions';
 import api from './src/web';
@@ -91,7 +92,7 @@ class RecordingModule extends Component {
             {video && (
               <TouchableOpacity
                 onPress={function () {
-                  navigation.navigate('waitingPage');
+                  navigation.push('waitingPage');
                   // this._uploadVideo;
                 }}
                 style={{
@@ -116,9 +117,9 @@ class RecordingModule extends Component {
               </Text>
             </TouchableOpacity>
           </Camera>) : (
-            <TouchableOpacity onPress={this._showCamera}>
-              <Text> Record </Text>
-            </TouchableOpacity>
+            <Button large dark onPress={this._showCamera}>
+            <Text style={{color:"white"}}>Record</Text>
+          </Button>
           )}
       </View>
     );
