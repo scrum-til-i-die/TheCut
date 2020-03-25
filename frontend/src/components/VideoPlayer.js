@@ -8,7 +8,7 @@ class VideoPlayer extends Component {
 
 	static propTypes = {
 		videoURI: PropTypes.any,
-  }
+  	}
 	
 	constructor(...props) {
     super(...props);

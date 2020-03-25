@@ -108,7 +108,8 @@ class RecordingModule extends Component {
             {video && (
               <TouchableOpacity
                 onPress={function () {
-                  navigation.navigate('waitingPage');
+                  // navigation.navigate('waitingPage');
+                  console.log('uploading');
                   // this._uploadVideo;
                 }}
                 // style={{
@@ -135,7 +136,7 @@ class RecordingModule extends Component {
                 </View>
 
                 : <Text>r</Text>} */}
-              <VideoPlayer videoURI = {this.state.video.uri} playback = {this.state.playback}></VideoPlayer>
+              <VideoPlayer videoURI = {this.state.video.uri}></VideoPlayer>
               </TouchableOpacity>
             )}
             <View style={styles.content}>
