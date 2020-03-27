@@ -21,6 +21,7 @@ var storage = multer.diskStorage({
         fs.mkdir(dirName, function(err){
             if(err) throw err;
         });
+        sleep.msleep(100);
         cb(null, dirName)
     },
     filename: function(req, file, cb){
@@ -37,7 +38,7 @@ app.post('/uploadfile', upload.any(), (req, res) => {
 
     createJob(jobId).then(function(response){
         var success = response;
-        sleep.msleep(100);
+        
 
         if (success === false){
             rimraf(`/app/uploads/${jobId}`, function() {});
@@ -57,7 +58,7 @@ app.post('/uploadfile', upload.any(), (req, res) => {
     })
 });
 
-app.get('/getstatus', (req, res) => {
+app.get('/status', (req, res) => {
     var jobId = req.query.jobId;
 
     getJob(jobId).then(function(response){
@@ -87,7 +88,7 @@ function createJob(jobId){
 }
 
 function getJob(jobId){
-    return axios.get('http://job-controller:5001/get-job', { params: {jobId} })
+    return axios.get('http://job-controller:5001/job', { params: {jobId} })
     .then(response => {
         return response.data
     })
