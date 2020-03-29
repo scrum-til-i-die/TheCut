@@ -1,9 +1,6 @@
 # This module extracts audio from a video file and process its speech
 import sys, os, io, re
 
-# Set GOOGLE_APP_CREDS
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"]="/app/secrets/TheCut-5b433024b0c1.json"
-
 #Imports the MoviePy client library
 from moviepy.editor import *
 

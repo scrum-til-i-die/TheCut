@@ -45,9 +45,6 @@ class ProcessFile(threading.Thread):
         resultTitle = ""
         inter = self.audioResult.keys() & self.videoResult.keys()
         if (len(inter) == 0):
-            # self.failureReason = self.failureReason + "Intersection length 0 "
-            self.failureReason = self.failureReason + "Audio length: " + str(len(self.audioResult.keys())) + " "
-            # self.failureReason = self.failureReason + "Video length: " + str(len(self.videoResult.keys())) + " "
             audioTop = next(iter(self.audioResult))
             videoTop = next(iter(self.videoResult))
             audioTopResult = self.audioResult[audioTop]
@@ -66,7 +63,6 @@ class ProcessFile(threading.Thread):
 
         print (resultTitle)
         if (resultTitle == None):
-            # self.failureReason = self.failureReason + "No Result Title "
             return
         
         resultId = get_movie_id(resultTitle)
