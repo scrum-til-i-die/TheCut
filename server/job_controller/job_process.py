@@ -11,6 +11,7 @@ class ProcessFile(threading.Thread):
         self.jobId = jobId
         self.audioResult = dict()
         self.videoResult = dict()
+        self.failureReason = ""
         self._stopper = threading.Event() 
         threading.Thread.__init__(self)
   
@@ -27,10 +28,14 @@ class ProcessFile(threading.Thread):
     
     def process_video(self):
         self.videoResult = VideoProcess(self.jobId)
+        if (self.videoResult == None):
+            self.failureReason = self.failureReason + "No video results "
         return
     
     def process_audio(self):
         self.audioResult = AudioProcess(self.jobId)
+        if (self.audioResult == None):
+            self.failureReason = self.failureReason + "No audio results "
         return
   
     def analyze_results(self):
@@ -40,8 +45,11 @@ class ProcessFile(threading.Thread):
         resultTitle = ""
         inter = self.audioResult.keys() & self.videoResult.keys()
         if (len(inter) == 0):
-            audioTop = set(self.audioResult.keys()).pop()
-            videoTop = set(self.videoResult.keys()).pop()
+            # self.failureReason = self.failureReason + "Intersection length 0 "
+            self.failureReason = self.failureReason + "Audio length: " + str(len(self.audioResult.keys())) + " "
+            # self.failureReason = self.failureReason + "Video length: " + str(len(self.videoResult.keys())) + " "
+            audioTop = next(iter(self.audioResult))
+            videoTop = next(iter(self.videoResult))
             audioTopResult = self.audioResult[audioTop]
             videoTopResult = self.videoResult[videoTop]
 
@@ -54,11 +62,17 @@ class ProcessFile(threading.Thread):
                 results[title] = (self.videoResult[title] + self.audioResult[title])/2
 
             results = {k: v for k, v in sorted(results.items(), key=lambda item: (item[1]), reverse=True)}
-            resultTitle = set(results.keys()).pop()
+            resultTitle = next(iter(results))
 
+        print (resultTitle)
+        if (resultTitle == None):
+            # self.failureReason = self.failureReason + "No Result Title "
+            return
+        
         resultId = get_movie_id(resultTitle)
 
-        if (resultId in DbConnect.get_all_moviemetadata_id()):
+        print(resultId)
+        if (str(resultId) in DbConnect.get_all_moviemetadata_id()):
             metadata = DbConnect.get_moviemetadata(resultId)
         else:
             metadata = get_metadata(resultId)

@@ -43,10 +43,12 @@ class Job(threading.Thread):
         #     failed = True
         #     error_message = "Exception"
 
+        # dir_path = "/app/uploads/" + self.jobId + "/images"
         dir_path = "/app/uploads/" + self.jobId
         shutil.rmtree(dir_path)
 
         if (self.failed == True):
+            error_message = x.failureReason
             DbConnect.complete_job(self.jobId, JobStatus.fail, finished_on, error=error_message)
             return
 
