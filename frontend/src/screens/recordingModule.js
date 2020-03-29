@@ -10,13 +10,18 @@ import { Ionicons } from '@expo/vector-icons';
 import VideoPlayer from '../components/VideoPlayer'
 
 class RecordingModule extends Component {
-  state = {
-    video: null,
-    picture: null,
-    recording: false,
-    cameraPermission: false,
-    playback: false
-  };
+  constructor(props) {
+    super(props);
+    this.setPlayback = this.setPlayback.bind(this);
+    this.upload = this.upload.bind(this);
+    this.state = {
+      video: null,
+      picture: null,
+      recording: false,
+      cameraPermission: false,
+      playback: false
+    }
+  }
 
   async componentDidMount() {
     await Permissions.askAsync(Permissions.AUDIO_RECORDING);
@@ -47,13 +52,14 @@ class RecordingModule extends Component {
   _StopRecord = async () => {
     this.setState({ 
       recording: false,
-      playback: true 
+      playback: true
     }, () => {
       this.cam.stopRecording();
     });
   };
 
   _StartRecord = async () => {
+    
     if (this.cam) {
       this.setState({ recording: true }, async () => {
         const video = await this.cam.recordAsync();
@@ -64,15 +70,14 @@ class RecordingModule extends Component {
 
   toogleRecord = () => {
     const { recording } = this.state;
-    console.log("hi");
-
     if (recording) {
       this._StopRecord();
+
     } else {
       this._StartRecord();
+
     }
   };
-
 
   _showCamera = async () => {
     await Permissions.askAsync(Permissions.AUDIO_RECORDING);
@@ -84,21 +89,21 @@ class RecordingModule extends Component {
     }
   };
 
-  render() {
-    const { recording, video, cameraPermission} = this.state;
-    const { navigation } = this.props;
-    const { width, height } = Dimensions.get('window');
+  setPlayback() {
+    this.setState({ playback: false });
+  }
 
-    console.log("cameraPermission", this.state.cameraPermission);
+  upload() {
+    const { navigation } = this.props;
+    navigation.push('waitingPage');
+  }
+
+  render() {
+    const { recording, video, cameraPermission, playback } = this.state;
 
     return (
       <View
-        style={{
-          justifyContent: "center",
-          alignItems: "center",
-          flex: 1,
-          width: "100%"
-        }}
+        style={styles.camWrapper}
       >
         {cameraPermission ? (
           <Camera
@@ -108,47 +113,33 @@ class RecordingModule extends Component {
             {video && (
               <TouchableOpacity
                 onPress={function () {
-                  // navigation.navigate('waitingPage');
-                  console.log('uploading');
                   // this._uploadVideo;
                 }}
-                // style={{
-                //   padding: 0,
-                //   width: "100%",
-                //   backgroundColor: "#fff"
-                // }}
               >
-              {/* {this.state.playback ?
-                <View>
-                  <Ionicons 
-                    name="md-close"
-                    style={{ position: 'absolute', zIndex: 1, bottom: 10, left: 10 }}
-                    size={64} color="black"
-                    onPress={this.stopPlayback}
-                  />
-                  <Video
-                    source={{ uri: this.state.video.uri }}
-                          shouldPlay
-                          isLooping
-                    resizeMode="cover"
-                    style={{ width, height }}
-                  />
-                </View>
-
-                : <Text>r</Text>} */}
-              <VideoPlayer videoURI = {this.state.video.uri}></VideoPlayer>
+              { playback &&
+                <VideoPlayer 
+                  videoURI = {video.uri} 
+                  setPlayback={this.setPlayback}
+                  upload={this.upload}
+                >
+                </VideoPlayer>
+              }
               </TouchableOpacity>
             )}
             <View style={styles.content}>
-            <TouchableOpacity
-              onPress={this.toogleRecord}
-              style={styles.buttonContainer}
-            >
-              <Text style={{ textAlign: "center" }}>
-                {recording ? 
-                <View style={styles.circleInside}></View> : ""}
-              </Text>
-            </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={this.toogleRecord}
+                  style={ 
+                    playback ? 
+                      styles.hidden 
+                    : styles.buttonContainer
+                  }
+                >
+                  <Text style={{ textAlign: "center" }}>
+                    {recording &&
+                    <View style={styles.circleInside}></View>}
+                  </Text>
+                </TouchableOpacity>
             </View>
           </Camera>) : (
             <TouchableOpacity onPress={this._showCamera}>
