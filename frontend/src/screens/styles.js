@@ -3,6 +3,12 @@ import { StyleSheet, Dimensions } from 'react-native';
 const { width, height } = Dimensions.get('window');
 
 export default StyleSheet.create({
+    camWrapper: {
+      justifyContent: "center",
+      alignItems: "center",
+      flex: 1,
+      width: "100%"
+    },
     preview: {
         height,
         width,
@@ -12,12 +18,10 @@ export default StyleSheet.create({
         right: 0,
         bottom: 0,
     },
-
     buttonContainer: {
         width: 80,
         height: 80,
         borderRadius: 40,
-        // backgroundColor: '#D91E18',
         alignItems: 'center',
         justifyContent: 'center',
         borderWidth: 5,
@@ -30,15 +34,6 @@ export default StyleSheet.create({
         backgroundColor: '#D91E18',
         
       },
-      buttonStopContainer: {
-        backgroundColor: 'transparent',
-      },
-      buttonStop: {
-        backgroundColor: '#D91E18',
-        width: 40,
-        height: 40,
-        borderRadius: 3,
-      },
       content: {
         width,
         position: 'absolute',
@@ -48,4 +43,7 @@ export default StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
       },
+      hidden: {
+        display: 'none'
+      }
 });
