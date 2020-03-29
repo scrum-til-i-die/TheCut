@@ -6,7 +6,7 @@ class Waiting extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      processing: false,
+      processing: true,
       processingAfter10: false,
       errored: false,
       finished: true,
@@ -54,7 +54,7 @@ class Waiting extends Component {
           <Spinner color='red' />
         </View>
       )
-    } else if (props.finished && !props.errored && !props.processing) {
+    } else if (props.finished && !props.errored && !props.processing && props.processingAfter10) {
       return (
         <View style={styles.card}>
           <Text style={{ fontSize: 20, padding: 10 }}>Your video is processed. </Text>
