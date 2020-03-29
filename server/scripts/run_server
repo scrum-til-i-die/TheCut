@@ -11,7 +11,7 @@ docker stop web-controller job-controller
 docker container prune -f
 
 # Start up job-controller
-docker run -d -p 5001:5001 -v /app/secrets/:/app/secrets/ --network=local-net --name job-controller capstonegroup17/thecut-app:job-controller
+docker run -d -p 5001:5001 -v /app/secrets/:/app/secrets/ -v /app/uploads/:/app/uploads/ --network=local-net --name job-controller capstonegroup17/thecut-app:job-controller
 
 # Start up web-controller
 docker run -d -p 3000:3000 -v /app/uploads/:/app/uploads/ --network=local-net --name web-controller capstonegroup17/thecut-app:web-controller
