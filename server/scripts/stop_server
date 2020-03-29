@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# Stop current running containers
+docker stop web-controller job-controller

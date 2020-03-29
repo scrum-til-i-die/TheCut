@@ -69,7 +69,7 @@ class Results extends Component {
           </List>
         </Content>
 
-        <Button block dark onPress={function () { navigation.navigate("recordingModule") }}>
+        <Button block dark onPress={function () { navigation.push("recordingModule") }}>
           <Text>Record Again</Text>
         </Button>
 

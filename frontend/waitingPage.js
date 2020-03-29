@@ -6,19 +6,45 @@ class Waiting extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      processing: false,
+      processing: true,
+      processingAfter10: false,
       errored: false,
-      finished: true
+      finished: true,
     }
+  }
+
+  componentDidMount() {
+    setTimeout(() => {
+      this.setState({ processingAfter10: true });
+    }, 10000);
   }
 
   renderWaitingText = (props) => {
     const { navigation } = this.props;
-    if (props.processing && !props.errored) {
+    if (props.processing && !props.errored && !props.processingAfter10) {
       return (
         <View style={styles.card}>
-          <Text style={{ fontSize: 20 }}>The video is being processed.</Text>
+          <Text style={{ fontSize: 20 }}>
+            We are processing your video.
+          </Text>
           <Spinner />
+        </View>
+      )
+    } else if (props.processing && props.processingAfter10) {
+      return (
+        <View style={styles.card}>
+          <Text style={{ fontSize: 20 }}>
+            Sorry, we cannot generate a result right now. Please wait as we continue processing your video.
+          </Text>
+          <Spinner />
+          <Button>
+            <Text
+              onPress={function () {
+                navigation.push('recordingModule'); // navigate regardless of the existing nav history
+              }}>
+              Cancel
+            </Text>
+          </Button>
         </View>
       )
     } else if (props.errored && !props.processing) {
@@ -28,7 +54,7 @@ class Waiting extends Component {
           <Spinner color='red' />
         </View>
       )
-    } else if (props.finished && !props.errored && !props.processing) {
+    } else if (props.finished && !props.errored && !props.processing && props.processingAfter10) {
       return (
         <View style={styles.card}>
           <Text style={{ fontSize: 20, padding: 10 }}>Your video is processed. </Text>
@@ -45,12 +71,11 @@ class Waiting extends Component {
   }
 
   render() {
-    const { navigation } = this.props;
-    const { processing, errored, finished } = this.state;
+    const { processing, processingAfter10, errored, finished } = this.state;
     return (
       <Container>
         <Content>
-          <this.renderWaitingText processing={processing} errored={errored} finished={finished} />
+          <this.renderWaitingText processing={processing} processingAfter10={processingAfter10} errored={errored} finished={finished} />
         </Content>
       </Container>
     );
