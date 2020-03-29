@@ -34,13 +34,27 @@ class ProcessFile(threading.Thread):
         return
   
     def analyze_results(self):
+        # Prune out non-movie titles from video_results dictionary?
+        
         results = dict()
+        resultTitle = ""
         inter = self.audioResult.keys() & self.videoResult.keys()
-        for title in inter:
-            results[title] = (self.videoResult[title] + self.audioResult[title])/2
+        if (len(inter) == 0):
+            audioTop = set(self.audioResult.keys()).pop()
+            videoTop = set(self.videoResult.keys()).pop()
+            audioTopResult = self.audioResult[audioTop]
+            videoTopResult = self.videoResult[videoTop]
 
-        results = {k: v for k, v in sorted(results.items(), key=lambda item: (item[1]), reverse=True)}
-        resultTitle = set(results.keys()).pop()
+            if (audioTopResult > videoTopResult):
+                resultTitle = audioTop
+            else:
+                resultTitle = videoTop
+        else:
+            for title in inter:
+                results[title] = (self.videoResult[title] + self.audioResult[title])/2
+
+            results = {k: v for k, v in sorted(results.items(), key=lambda item: (item[1]), reverse=True)}
+            resultTitle = set(results.keys()).pop()
 
         resultId = get_movie_id(resultTitle)
 

@@ -8,6 +8,7 @@ services:
       - "5001:5001"
     volumes:
     - /app/secrets/:/app/secrets/
+    - /app/uploads/:/app/uploads/
   web:
     container_name: web-controller
     restart: always
@@ -15,7 +16,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-    - /app/uploads:/app/uploads
+    - /app/uploads/:/app/uploads/
 networks:
   default:
     external:

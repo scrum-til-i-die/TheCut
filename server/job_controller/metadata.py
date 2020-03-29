@@ -14,8 +14,15 @@ def get_movie_id(movie_name):
         "query": movie_name
     }
     data = requests.get(base_url+'/search/movie', params).json()
+    
     # Check if movie is actually a movie
-    return -1 if not data["results"] else data["results"][0]["id"]
+    if (data == None):
+        return -1
+    else: 
+        if not data["results"]:
+            return -1
+        else:
+            data["results"][0]["id"]
 
 # Get movie metadata from id
 def get_metadata(movie_id):
