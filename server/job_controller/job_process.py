@@ -29,13 +29,13 @@ class ProcessFile(threading.Thread):
     def process_video(self):
         self.videoResult = VideoProcess(self.jobId)
         if (self.videoResult == None):
-            self.failureReason = self.failureReason + "No video results "
+            self.failureReason = self.failureReason + "No video results; "
         return
     
     def process_audio(self):
         self.audioResult = AudioProcess(self.jobId)
-        if (self.audioResult == None):
-            self.failureReason = self.failureReason + "No audio results "
+        if (self.audioResult.keys()[0] == None):
+            self.failureReason = self.failureReason + "No audio results; "
         return
   
     def analyze_results(self):
@@ -86,6 +86,9 @@ class ProcessFile(threading.Thread):
         audioThread.join()
         videoThread.join()
 
+        if (self.failureReason != ""):
+            return
+        
         result = self.analyze_results()
 
         if self.stopped():

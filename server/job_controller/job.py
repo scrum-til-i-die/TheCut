@@ -36,6 +36,8 @@ class Job(threading.Thread):
         if (x.is_alive()):
             self.failed = True
             error_message = "Timeout Error"
+        elif (x.failureReason != ""):
+            error_message = x.failureReason
         elif (x.Result == None):
             self.failed = True
             error_message = "No Results Returned"
@@ -48,7 +50,6 @@ class Job(threading.Thread):
         shutil.rmtree(dir_path)
 
         if (self.failed == True):
-            error_message = x.failureReason
             DbConnect.complete_job(self.jobId, JobStatus.fail, finished_on, error=error_message)
             return
 
