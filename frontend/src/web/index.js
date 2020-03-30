@@ -8,7 +8,7 @@ export default {
             data,
         )
         .then(function (response) {
-            console.log(response);
+            return response;
         })
         .catch(function (error) {
             console.log(error);
@@ -20,12 +20,12 @@ export default {
             '/status',
             {
                 params: {
-                  jobID: id
+                  jobId: id
                 }
             }
         )
         .then(function (response) {
-            console.log(response);
+            return response;
         })
         .catch(function (error) {
             console.log(error);

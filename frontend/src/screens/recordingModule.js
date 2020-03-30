@@ -5,8 +5,7 @@ import * as Permissions from 'expo-permissions';
 import api from '../web';
 import FormData from 'form-data';
 import styles from './styles';
-import { Video } from 'expo-av';
-import { Ionicons } from '@expo/vector-icons';
+import GLOBAL from '../global.js';
 import VideoPlayer from '../components/VideoPlayer'
 
 class RecordingModule extends Component {
@@ -93,8 +92,25 @@ class RecordingModule extends Component {
     this.setState({ playback: false });
   }
 
-  upload() {
+  upload = async () => {
+    
     const { navigation } = this.props;
+    const { video } = this.state;
+    const type = 'video/mp4';
+    const uri = video.uri;
+
+    // Form object for video file
+    const data = new FormData();
+    data.append("video", {
+      name: uri,
+      type,
+      uri
+    });
+
+    await api.uploadVideo(data).then(
+      function(response) {
+        GLOBAL.job_id = response.data.job_id;
+      });
     navigation.push('waitingPage');
   }
 
@@ -105,47 +121,37 @@ class RecordingModule extends Component {
       <View
         style={styles.camWrapper}
       >
-        {cameraPermission ? (
+        { cameraPermission ? (
           <Camera
             ref={cam => (this.cam = cam)}
             style={styles.preview}
           >
-            {video && (
-              <TouchableOpacity
-                onPress={function () {
-                  // this._uploadVideo;
-                }}
-              >
-              { playback &&
-                <VideoPlayer 
-                  videoURI = {video.uri} 
-                  setPlayback={this.setPlayback}
-                  upload={this.upload}
-                >
-                </VideoPlayer>
-              }
-              </TouchableOpacity>
-            )}
-            <View style={styles.content}>
-                <TouchableOpacity
-                  onPress={this.toogleRecord}
-                  style={ 
-                    playback ? 
-                      styles.hidden 
-                    : styles.buttonContainer
-                  }
-                >
-                  <Text style={{ textAlign: "center" }}>
-                    {recording &&
-                    <View style={styles.circleInside}></View>}
-                  </Text>
-                </TouchableOpacity>
-            </View>
-          </Camera>) : (
-            <TouchableOpacity onPress={this._showCamera}>
-              <Text> Record </Text>
-            </TouchableOpacity>
-          )}
+          </Camera>) :
+          <TouchableOpacity onPress={this._showCamera}>
+            <Text> Record </Text>
+          </TouchableOpacity>
+        }
+        { video && playback &&
+          <VideoPlayer 
+            videoURI = {video.uri} 
+            setPlayback={this.setPlayback}
+            upload={this.upload}
+          ></VideoPlayer>
+        }
+        <View style={styles.content}>
+          <TouchableOpacity
+            onPress={this.toogleRecord}
+            style={ 
+              playback ? 
+                styles.hidden 
+              : styles.buttonContainer
+            }>
+            <Text style={{ textAlign: "center" }}>
+              {recording &&
+              <View style={styles.circleInside}></View>}
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }

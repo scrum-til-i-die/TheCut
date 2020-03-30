@@ -4,7 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import recordingModule from './src/screens/recordingModule';
 import waitingPage from './waitingPage';
-import resultsPage from './resultsPage';
+import resultsPage from './src/screens/resultsPage';
 
 const Stack = createStackNavigator();
 

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Container, Spinner, Content, Text, Button } from 'native-base';
+import api from './src/web';
+import GLOBAL from './src/global.js';
 
 class Waiting extends Component {
   constructor(props) {
@@ -9,14 +11,25 @@ class Waiting extends Component {
       processing: true,
       processingAfter10: false,
       errored: false,
-      finished: true,
+      finished: false,
     }
   }
 
   componentDidMount() {
-    setTimeout(() => {
+    var timeout = setTimeout(() => {
       this.setState({ processingAfter10: true });
     }, 10000);
+    let timer = setInterval(async () => {
+      const { navigation } = this.props;
+      if (GLOBAL.job_id != null) {
+        await api.getResults(GLOBAL.job_id).then(function(res) {
+          clearInterval(timer);
+          clearTimeout(timeout);
+          navigation.navigate('resultsPage');
+          
+        })
+      }
+    }, 3000);
   }
 
   renderWaitingText = (props) => {
@@ -54,7 +67,7 @@ class Waiting extends Component {
           <Spinner color='red' />
         </View>
       )
-    } else if (props.finished && !props.errored && !props.processing && props.processingAfter10) {
+    } else if (props.finished) {
       return (
         <View style={styles.card}>
           <Text style={{ fontSize: 20, padding: 10 }}>Your video is processed. </Text>

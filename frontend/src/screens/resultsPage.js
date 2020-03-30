@@ -2,35 +2,27 @@ import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
 import { Container, Button, Content, List, ListItem, Text } from 'native-base';
 const axios = require('axios');
-import { apiKey } from 'react-native-dotenv'
+import api from '../web';
+import GLOBAL from '../global.js';
 
 class Results extends Component {
   state = {
-    movie: 'jurassic park',
+    movie: null,
     metadata: []
   };
 
-  componentDidMount() {
-    axios.get('https://api.themoviedb.org/3/search/movie?api_key=' + apiKey + '&language=en-US&query=' + this.state.movie + '&page=1')
-      .then(response => {
-        id = response.data.results[0].id;
-        axios.get('https://api.themoviedb.org/3/movie/' + id + '?api_key=' + apiKey)
-          .then(response2 => this.setState({ metadata: response2.data }))
-          .catch(function (error) {
-            alert(error);
-          });
-      })
-      .catch(function (error) {
-        alert(error);
-      });
+  async componentDidMount() {
+    const response = await api.getResults(GLOBAL.job_id);
+    this.setState({ movie: response.data.movie_id });
   }
 
   render() {
+
     const { navigation } = this.props
 
     return (
       <Container>
-
+        <Text>{this.state.movie}</Text> 
         <Content>
           <List>
             <ListItem itemDivider>
@@ -69,9 +61,9 @@ class Results extends Component {
           </List>
         </Content>
 
-        <Button block dark onPress={function () { navigation.push("recordingModule") }}>
+        {/* <Button block dark onPress={function () { navigation.push("recordingModule") }}>
           <Text>Record Again</Text>
-        </Button>
+        </Button> */}
 
       </Container>
     )
