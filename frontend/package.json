@@ -21,6 +21,7 @@
     "expo-camera": "~8.0.0",
     "expo-permissions": "~8.0.0",
     "form-data": "^3.0.0",
+    "moment": "^2.24.0",
     "native-base": "^2.13.8",
     "react": "~16.9.0",
     "react-dom": "~16.9.0",
