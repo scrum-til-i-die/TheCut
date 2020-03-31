@@ -45,5 +45,12 @@ export default StyleSheet.create({
       },
       hidden: {
         display: 'none'
+      },
+      timer: {
+        marginTop: 20,
+        color: 'white',
+        textAlign: 'center',
+        fontSize: 20,
+        alignItems: 'center',
       }
 });

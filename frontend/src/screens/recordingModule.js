@@ -8,6 +8,7 @@ import styles from './styles';
 import { Video } from 'expo-av';
 import { Ionicons } from '@expo/vector-icons';
 import VideoPlayer from '../components/VideoPlayer'
+import moment from 'moment';
 
 class RecordingModule extends Component {
   constructor(props) {
@@ -19,7 +20,8 @@ class RecordingModule extends Component {
       picture: null,
       recording: false,
       cameraPermission: false,
-      playback: false
+      playback: false,
+      time: 0
     }
   }
 
@@ -72,9 +74,11 @@ class RecordingModule extends Component {
     const { recording } = this.state;
     if (recording) {
       this._StopRecord();
+      this.stopTimer();
 
     } else {
       this._StartRecord();
+      this.startTimer();
 
     }
   };
@@ -98,8 +102,25 @@ class RecordingModule extends Component {
     navigation.push('waitingPage');
   }
 
+  startTimer = () => {
+    this.timer = setInterval(() => {
+      const time = this.state.time + 1;
+      this.setState({ time });
+    }, 1000);
+  }
+
+  stopTimer = () => {
+    if (this.timer) {
+      clearInterval(this.timer)
+      this.setState({ time: 0 });
+    }
+  }
+  convertTimeString = (time) => {
+    return moment().startOf('day').seconds(time).format('mm:ss');
+  }
+
   render() {
-    const { recording, video, cameraPermission, playback } = this.state;
+    const { recording, video, cameraPermission, playback, time } = this.state;
 
     return (
       <View
@@ -110,12 +131,14 @@ class RecordingModule extends Component {
             ref={cam => (this.cam = cam)}
             style={styles.preview}
           >
+
             {video && (
               <TouchableOpacity
                 onPress={function () {
                   // this._uploadVideo;
                 }}
               >
+                
               { playback &&
                 <VideoPlayer 
                   videoURI = {video.uri} 
@@ -126,6 +149,10 @@ class RecordingModule extends Component {
               }
               </TouchableOpacity>
             )}
+            <Text style={styles.timer}>
+            {recording &&
+              <Text >●{this.convertTimeString(time)}</Text>}
+            </Text>
             <View style={styles.content}>
                 <TouchableOpacity
                   onPress={this.toogleRecord}
@@ -138,6 +165,7 @@ class RecordingModule extends Component {
                   <Text style={{ textAlign: "center" }}>
                     {recording &&
                     <View style={styles.circleInside}></View>}
+                    
                   </Text>
                 </TouchableOpacity>
             </View>
