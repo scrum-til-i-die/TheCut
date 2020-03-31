@@ -4,7 +4,6 @@ from google.cloud import vision_v1
 from google.cloud.vision import types
 from collections import defaultdict
 
-
 def SplitVideo(job_id):
     # Base Path for job
     job_path = "/app/uploads/" + job_id
@@ -75,7 +74,7 @@ def AnnotateFrames(job_id):
                 resultsDict[d.description] += 1
     
     # compute percentages and order
-    return {k: v/len(resultsDict.keys()) for k, v in sorted(resultsDict.items(), key=lambda item: (item[1]), reverse=True)}
+    return {k: v for k, v in sorted(resultsDict.items(), key=lambda item: (item[1]), reverse=True)}
 
 # Wrapper to run all methods
 def VideoProcess(job_id):

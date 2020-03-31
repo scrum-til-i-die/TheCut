@@ -27,15 +27,24 @@ class ProcessFile(threading.Thread):
         return self._stopper.is_set() 
     
     def process_video(self):
-        self.videoResult = VideoProcess(self.jobId)
-        if (self.videoResult == None):
+        VRS = {get_movie_id(k): v for k, v in VideoProcess(self.jobId).items()}
+        length = len(VRS.keys())
+
+        if (VRS == None):
             self.failureReason = self.failureReason + "No video results; "
+            return
+
+        self.videoResult = {k: v/length for k, v in sorted(VRS.items(), key=lambda item: (item[1]), reverse=True) if k != -1}
         return
     
     def process_audio(self):
-        self.audioResult = AudioProcess(self.jobId)
-        if (self.audioResult.keys()[0] == None):
+        ARS = {get_movie_id(k): v for k, v in AudioProcess(self.jobId).items()}
+        length = len(ARS.keys())
+
+        if (not (ARS and ARS.keys()[0])):
             self.failureReason = self.failureReason + "No audio results; "
+
+        self.audioResult = {k: v/length for k, v in sorted(ARS.items(), key=lambda item: (item[1]), reverse=True) if k != -1}
         return
   
     def analyze_results(self):
@@ -43,6 +52,7 @@ class ProcessFile(threading.Thread):
         
         results = dict()
         resultTitle = ""
+        
         inter = self.audioResult.keys() & self.videoResult.keys()
         if (len(inter) == 0):
             audioTop = next(iter(self.audioResult))
