@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as Permissions from 'expo-permissions';
 import api from '../web';
 import FormData from 'form-data';
 import styles from './styles';
-import { Video } from 'expo-av';
-import { Ionicons } from '@expo/vector-icons';
 import VideoPlayer from '../components/VideoPlayer'
 import moment from 'moment';
 
@@ -17,7 +15,6 @@ class RecordingModule extends Component {
     this.upload = this.upload.bind(this);
     this.state = {
       video: null,
-      picture: null,
       recording: false,
       cameraPermission: false,
       playback: false,
@@ -52,16 +49,28 @@ class RecordingModule extends Component {
   };
 
   _StopRecord = async () => {
-    this.setState({ 
-      recording: false,
-      playback: true
-    }, () => {
-      this.cam.stopRecording();
-    });
+    if (this.state.time < 10) {
+      Alert.alert(
+        "Warning",
+        "Please record more than 10 seconds.",
+        [{
+          text: 'OK', onPress: () => {
+            this.setState({
+              recording: false
+            });
+          }
+        }])
+    } else {
+      this.setState({
+        recording: false,
+        playback: true
+      });
+    }
+    this.cam.stopRecording();
   };
 
   _StartRecord = async () => {
-    
+
     if (this.cam) {
       this.setState({ recording: true }, async () => {
         const video = await this.cam.recordAsync();
@@ -131,43 +140,40 @@ class RecordingModule extends Component {
             ref={cam => (this.cam = cam)}
             style={styles.preview}
           >
-
             {video && (
               <TouchableOpacity
                 onPress={function () {
                   // this._uploadVideo;
                 }}
               >
-                
-              { playback &&
-                <VideoPlayer 
-                  videoURI = {video.uri} 
-                  setPlayback={this.setPlayback}
-                  upload={this.upload}
-                >
-                </VideoPlayer>
-              }
+                {playback &&
+                  <VideoPlayer
+                    videoURI={video.uri}
+                    setPlayback={this.setPlayback}
+                    upload={this.upload}
+                  >
+                  </VideoPlayer>
+                }
               </TouchableOpacity>
             )}
             <Text style={styles.timer}>
-            {recording &&
-              <Text >●{this.convertTimeString(time)}</Text>}
+              {recording &&
+                <Text >●{this.convertTimeString(time)}</Text>}
             </Text>
             <View style={styles.content}>
-                <TouchableOpacity
-                  onPress={this.toogleRecord}
-                  style={ 
-                    playback ? 
-                      styles.hidden 
+              <TouchableOpacity
+                onPress={this.toogleRecord}
+                style={
+                  playback ?
+                    styles.hidden
                     : styles.buttonContainer
-                  }
-                >
-                  <Text style={{ textAlign: "center" }}>
-                    {recording &&
+                }
+              >
+                <Text style={{ textAlign: "center" }}>
+                  {recording &&
                     <View style={styles.circleInside}></View>}
-                    
-                  </Text>
-                </TouchableOpacity>
+                </Text>
+              </TouchableOpacity>
             </View>
           </Camera>) : (
             <TouchableOpacity onPress={this._showCamera}>
