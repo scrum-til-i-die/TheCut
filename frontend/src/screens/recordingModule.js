@@ -65,8 +65,9 @@ class RecordingModule extends Component {
       this.setState({
         recording: false,
         playback: true
-      }, () => { this.cam.stopRecording(); })
+      });
     }
+    this.cam.stopRecording();
   };
 
   _StartRecord = async () => {
