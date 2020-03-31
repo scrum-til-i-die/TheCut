@@ -56,7 +56,6 @@ class RecordingModule extends Component {
         [{
           text: 'OK', onPress: () => {
             this.setState({
-              video: null,
               recording: false
             });
           }
