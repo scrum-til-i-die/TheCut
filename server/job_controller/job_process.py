@@ -6,7 +6,7 @@ from metadata import *
 from job_db import DbConnect
 
 class ProcessFile(threading.Thread):   
-    def __init__(self, jobId): 
+    def __init__(self, jobId):
         self.Result = None
         self.jobId = jobId
         self.audioResult = dict()
@@ -27,7 +27,7 @@ class ProcessFile(threading.Thread):
         return self._stopper.is_set() 
     
     def process_video(self):
-        VRS = {get_movie_id(k): v for k, v in VideoProcess(self.jobId).items()}
+        VRS = {get_movie_id(k): v for k, v in VideoProcess(self.jobId).items() if k}
         length = len(VRS.keys())
 
         if (VRS == None):
@@ -38,10 +38,10 @@ class ProcessFile(threading.Thread):
         return
     
     def process_audio(self):
-        ARS = {get_movie_id(k): v for k, v in AudioProcess(self.jobId).items()}
+        ARS = {get_movie_id(k): v for k, v in AudioProcess(self.jobId).items() if k}
         length = len(ARS.keys())
 
-        if (not (ARS and ARS.keys()[0])):
+        if (ARS == None):
             self.failureReason = self.failureReason + "No audio results; "
 
         self.audioResult = {k: v/length for k, v in sorted(ARS.items(), key=lambda item: (item[1]), reverse=True) if k != -1}
@@ -51,7 +51,7 @@ class ProcessFile(threading.Thread):
         # Prune out non-movie titles from video_results dictionary?
         
         results = dict()
-        resultTitle = ""
+        resultId = None
         
         inter = self.audioResult.keys() & self.videoResult.keys()
         if (len(inter) == 0):
@@ -61,23 +61,19 @@ class ProcessFile(threading.Thread):
             videoTopResult = self.videoResult[videoTop]
 
             if (audioTopResult > videoTopResult):
-                resultTitle = audioTop
+                resultId = audioTop
             else:
-                resultTitle = videoTop
+                resultId = videoTop
         else:
             for title in inter:
                 results[title] = (self.videoResult[title] + self.audioResult[title])/2
 
             results = {k: v for k, v in sorted(results.items(), key=lambda item: (item[1]), reverse=True)}
-            resultTitle = next(iter(results))
-
-        print (resultTitle)
-        if (resultTitle == None):
-            return
+            resultId = next(iter(results))
         
-        resultId = get_movie_id(resultTitle)
-
         print(resultId)
+        if not resultId: return
+
         if (str(resultId) in DbConnect.get_all_moviemetadata_id()):
             metadata = DbConnect.get_moviemetadata(resultId)
         else:

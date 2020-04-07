@@ -82,7 +82,7 @@ def __CountMovies(quotes):
 
     movieCount = sorted(movieCount.items(),key=lambda ms: ms[1], reverse=True)[:10]
     
-    return {k:v for k,v in movieCount}
+    return {k:v for k,v in movieCount if k}
 
 
 def AudioProcess(job_id):
