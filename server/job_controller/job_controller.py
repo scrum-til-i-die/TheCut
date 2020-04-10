@@ -2,6 +2,7 @@ from flask import Flask, request
 from flask_restful import Resource, Api
 from job import Job
 from job_db import DbConnect
+from status_enum import JobStatus
 
 app = Flask(__name__)
 api = Api(app)
@@ -35,6 +36,10 @@ def get_job():
             "job_id": jobId,
             "status": "Not Found"
         }
+
+    if (result["status"] == JobStatus.success):
+        movie_metadata = DbConnect.get_moviemetadata(result["movie_id"])
+        result["result"] = movie_metadata
 
     return result
 

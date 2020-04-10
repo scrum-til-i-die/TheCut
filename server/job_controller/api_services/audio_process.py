@@ -76,14 +76,13 @@ def __IdentifyMovie(quote):
 # { MovieName: Percentage of Results matching }
 def __CountMovies(quotes):
     movieCount = defaultdict(int)
-    num = len(quotes)
-    
+        
     movieResults = map(__IdentifyMovie, quotes)
     for movie in movieResults: movieCount[movie] += 1
 
     movieCount = sorted(movieCount.items(),key=lambda ms: ms[1], reverse=True)[:10]
     
-    return {k:v/num for k,v in movieCount}
+    return {k:v for k,v in movieCount if k}
 
 
 def AudioProcess(job_id):
