@@ -28,8 +28,7 @@ class Waiting extends Component {
           if (res.data.status != "running") {
             clearInterval(timer);
             clearTimeout(timeout);
-            console.log(res)
-            navigation.navigate('resultsPage');
+            navigation.push('resultsPage', res.data.result);
           }
         })
       }

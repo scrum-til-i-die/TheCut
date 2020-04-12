@@ -8,41 +8,35 @@ import { Ionicons } from '@expo/vector-icons';
 class Results extends Component {
   state = {
     metadata: {
-      title: '',
-      genres: '',
-      overview: '',
-      runtime: ''
     }
   };
-
+  
   async componentDidMount() {
-    await api.getResults(GLOBAL.job_id).then({
-      function(res) {
-        console.log(res.data.result.title)
-        this.setState({ metadata: res.data.result });
-      }
-    });
+    const { route } = this.props;
+    this.setState({ metadata: route.params });
+  }
+
+  componentWillUnmount(){
+    this.setState({ metadata: {} });
   }
 
   render() {
-    // const {metadata} = this.state;
-    const { navigation } = this.props
-
+    const { navigation } = this.props;
     return (
       <Container>
         <Text>{this.state.metadata.title}</Text>
         <Ionicons 
-					name="md-arrow-forward"
+					name="md-home"
 					style={{ 
 						position: 'absolute', 
 						zIndex: 1,
-						left: width - 70,
-						bottom: 10
+						right: 50,
+						top: 20
 					}}
 					size={48}
-					color="white"
+					color="black"
 					onPress={() => {
-						navigation.push('waitingPage');
+						navigation.push('recordingModule');
 					}}
 				/>
         <Content>
