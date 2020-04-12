@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as Permissions from 'expo-permissions';
 import api from '../web';
@@ -16,7 +16,6 @@ class RecordingModule extends Component {
     this.upload = this.upload.bind(this);
     this.state = {
       video: null,
-      picture: null,
       recording: false,
       cameraPermission: false,
       playback: false,
@@ -25,6 +24,7 @@ class RecordingModule extends Component {
   }
 
   async componentDidMount() {
+    GLOBAL.job_id = null;
     await Permissions.askAsync(Permissions.AUDIO_RECORDING);
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
     if (status === "granted") {
@@ -35,6 +35,7 @@ class RecordingModule extends Component {
   }
 
   _uploadVideo = async () => {
+    
     const { video } = this.state;
     const type = 'video/mp4';
     const uri = video.uri;
@@ -51,16 +52,28 @@ class RecordingModule extends Component {
   };
 
   _StopRecord = async () => {
-    this.setState({ 
-      recording: false,
-      playback: true
-    }, () => {
-      this.cam.stopRecording();
-    });
+    if (this.state.time < 10) {
+      Alert.alert(
+        "Warning",
+        "Please record more than 10 seconds.",
+        [{
+          text: 'OK', onPress: () => {
+            this.setState({
+              recording: false
+            });
+          }
+        }])
+    } else {
+      this.setState({
+        recording: false,
+        playback: true
+      });
+    }
+    this.cam.stopRecording();
   };
 
   _StartRecord = async () => {
-    
+
     if (this.cam) {
       this.setState({ recording: true }, async () => {
         const video = await this.cam.recordAsync();
@@ -97,7 +110,6 @@ class RecordingModule extends Component {
   }
 
   upload = async () => {
-    
     const { navigation } = this.props;
     const { video } = this.state;
     const type = 'video/mp4';
@@ -110,12 +122,14 @@ class RecordingModule extends Component {
       type,
       uri
     });
+    navigation.push('waitingPage');
 
     await api.uploadVideo(data).then(
       function(response) {
         GLOBAL.job_id = response.data.job_id;
+        console.log(GLOBAL.job_id);
       });
-    navigation.push('waitingPage');
+    
   }
 
   startTimer = () => {
@@ -147,9 +161,9 @@ class RecordingModule extends Component {
             ref={cam => (this.cam = cam)}
             style={styles.preview}
           >
-                    <Text style={styles.timer}>
-          {recording &&
-            <Text>●{this.convertTimeString(time)}</Text>}
+          <Text style={styles.timer}>
+            {recording &&
+          <Text>●{this.convertTimeString(time)}</Text>}
         </Text>
           </Camera>) :
           <TouchableOpacity onPress={this._showCamera}>

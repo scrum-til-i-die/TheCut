@@ -39,7 +39,7 @@ class DbConnect():
             db.commit()
         except Error as e:
             # log some error
-            print ("error")
+            print ("create_job error")
         finally:
             if db.is_connected():
                 cursor.close()
@@ -57,7 +57,7 @@ class DbConnect():
             db.commit()
         except Error as e:
             # log some error
-            print ("error")
+            print ("complete_job error")
         finally:
             if db.is_connected():
                 cursor.close()
@@ -90,7 +90,7 @@ class DbConnect():
             return result
         except Error as e:
             # log some error
-            print ("error")
+            print ("get_job error")
         finally:
             if db.is_connected():
                 cursor.close()
@@ -205,6 +205,30 @@ class DbConnect():
         except Error as e:
             # log some error
             print (e)
+        finally:
+            if db.is_connected():
+                cursor.close()
+                db.close()
+
+    @classmethod
+    def get_all_moviemetadata_id(cls):
+        db = cls.__get_db_connection()
+        try:
+            sql = ('SELECT movie_id '
+                    'FROM Movie_Metadata')
+            
+            cursor = db.cursor()
+            cursor.execute(sql)
+            results = cursor.fetchall()
+
+            movieIds = []
+            for result in results:
+                movieIds.append(str(result[0]))
+
+            return movieIds
+        except Error as e:
+            # log error
+            print("Error")
         finally:
             if db.is_connected():
                 cursor.close()

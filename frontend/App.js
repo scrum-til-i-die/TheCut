@@ -32,7 +32,8 @@ export default class App extends React.Component {
             name="resultsPage" 
             component={resultsPage} 
             options={{ 
-              title: 'Results' 
+              title: 'Results',
+              headerShown: false,
             }} 
           />
         </Stack.Navigator>

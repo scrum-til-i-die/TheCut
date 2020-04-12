@@ -12,6 +12,7 @@ class Waiting extends Component {
       processingAfter10: false,
       errored: false,
       finished: false,
+      timer: 0,
     }
   }
 
@@ -21,15 +22,23 @@ class Waiting extends Component {
     }, 10000);
     let timer = setInterval(async () => {
       const { navigation } = this.props;
+      console.log(GLOBAL.job_id);
       if (GLOBAL.job_id != null) {
         await api.getResults(GLOBAL.job_id).then(function(res) {
-          clearInterval(timer);
-          clearTimeout(timeout);
-          navigation.navigate('resultsPage');
-          
+          if (res.data.status != "running") {
+            clearInterval(timer);
+            clearTimeout(timeout);
+            console.log(res)
+            navigation.navigate('resultsPage');
+          }
         })
       }
     }, 3000);
+    this.setState({ timer: timer });
+  }
+
+  componentWillUnmount(){
+    clearInterval(this.state.timer);
   }
 
   renderWaitingText = (props) => {
@@ -53,6 +62,7 @@ class Waiting extends Component {
           <Button>
             <Text
               onPress={function () {
+
                 navigation.push('recordingModule'); // navigate regardless of the existing nav history
               }}>
               Cancel

@@ -1,28 +1,50 @@
 import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
 import { Container, Button, Content, List, ListItem, Text } from 'native-base';
-const axios = require('axios');
 import api from '../web';
 import GLOBAL from '../global.js';
+import { Ionicons } from '@expo/vector-icons';
 
 class Results extends Component {
   state = {
-    movie: null,
-    metadata: []
+    metadata: {
+      title: '',
+      genres: '',
+      overview: '',
+      runtime: ''
+    }
   };
 
   async componentDidMount() {
-    const response = await api.getResults(GLOBAL.job_id);
-    this.setState({ movie: response.data.movie_id });
+    await api.getResults(GLOBAL.job_id).then({
+      function(res) {
+        console.log(res.data.result.title)
+        this.setState({ metadata: res.data.result });
+      }
+    });
   }
 
   render() {
-
+    // const {metadata} = this.state;
     const { navigation } = this.props
 
     return (
       <Container>
-        <Text>{this.state.movie}</Text> 
+        <Text>{this.state.metadata.title}</Text>
+        <Ionicons 
+					name="md-arrow-forward"
+					style={{ 
+						position: 'absolute', 
+						zIndex: 1,
+						left: width - 70,
+						bottom: 10
+					}}
+					size={48}
+					color="white"
+					onPress={() => {
+						navigation.push('waitingPage');
+					}}
+				/>
         <Content>
           <List>
             <ListItem itemDivider>
@@ -45,18 +67,6 @@ class Results extends Component {
 
             <ListItem>
               <Text>Runtime: {this.state.metadata.runtime} min</Text>
-            </ListItem>
-
-            <ListItem>
-              <Text>Budget: ${this.state.metadata.budget}</Text>
-            </ListItem>
-
-            <ListItem>
-              <Text>Revenue: ${this.state.metadata.revenue}</Text>
-            </ListItem>
-
-            <ListItem>
-              <Text>Tagline: {this.state.metadata.tagline}</Text>
             </ListItem>
           </List>
         </Content>

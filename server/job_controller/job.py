@@ -1,8 +1,9 @@
-from job_process_file import ProcessFile
+from job_process import ProcessFile
 from status_enum import JobStatus
 from job_db import DbConnect
 import threading
 import datetime
+import shutil
 
 class Job(threading.Thread): 
     global error_message
@@ -35,6 +36,8 @@ class Job(threading.Thread):
         if (x.is_alive()):
             self.failed = True
             error_message = "Timeout Error"
+        elif (x.failureReason != ""):
+            error_message = x.failureReason
         elif (x.Result == None):
             self.failed = True
             error_message = "No Results Returned"
@@ -42,9 +45,14 @@ class Job(threading.Thread):
         #     failed = True
         #     error_message = "Exception"
 
+        # dir_path = "/app/uploads/" + self.jobId + "/images"
+        dir_path = "/app/uploads/" + self.jobId
+        shutil.rmtree(dir_path)
+
         if (self.failed == True):
-            DbConnect.job_complete(self.jobId, JobStatus.fail, finished_on, error=error_message)
+            DbConnect.complete_job(self.jobId, JobStatus.fail, finished_on, error=error_message)
             return
 
         movie_id = x.Result
+
         DbConnect.complete_job(self.jobId, JobStatus.success, finished_on, movie_id=movie_id)

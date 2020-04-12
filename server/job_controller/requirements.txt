@@ -4,7 +4,9 @@ mysql.connector
 configparser
 google-api-python-client
 google-cloud-speech
+google-cloud-vision
 requests
 python-dotenv
 opencv-python
 moviepy
+grpcio
