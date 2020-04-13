@@ -34,23 +34,6 @@ class RecordingModule extends Component {
     }
   }
 
-  _uploadVideo = async () => {
-    
-    const { video } = this.state;
-    const type = 'video/mp4';
-    const uri = video.uri;
-
-    // Form object for video file
-    const data = new FormData();
-    data.append("video", {
-      name: uri,
-      type,
-      uri
-    });
-
-    api.uploadVideo(data);
-  };
-
   _StopRecord = async () => {
     if (this.state.time < 10) {
       Alert.alert(
