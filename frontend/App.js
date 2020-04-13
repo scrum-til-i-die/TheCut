@@ -25,7 +25,8 @@ export default class App extends React.Component {
             name="waitingPage" 
             component={waitingPage} 
             options={{ 
-              title: 'Processing' 
+              title: 'Processing',
+              headerShown: false, 
             }} 
           />
           <Stack.Screen 

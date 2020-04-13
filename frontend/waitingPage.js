@@ -3,6 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import { Container, Spinner, Content, Text, Button } from 'native-base';
 import api from './src/web';
 import GLOBAL from './src/global.js';
+import { Ionicons } from '@expo/vector-icons';
 
 class Waiting extends Component {
   constructor(props) {
@@ -58,15 +59,6 @@ class Waiting extends Component {
             Sorry, we cannot generate a result right now. Please wait as we continue processing your video.
           </Text>
           <Spinner />
-          <Button>
-            <Text
-              onPress={function () {
-
-                navigation.push('recordingModule'); // navigate regardless of the existing nav history
-              }}>
-              Cancel
-            </Text>
-          </Button>
         </View>
       )
     } else if (props.errored && !props.processing) {
@@ -76,19 +68,6 @@ class Waiting extends Component {
           <Spinner color='red' />
         </View>
       )
-    } else if (props.finished) {
-      return (
-        <View style={styles.card}>
-          <Text style={{ fontSize: 20, padding: 10 }}>Your video is processed. </Text>
-          <Button block success
-            onPress={function () {
-              navigation.navigate('resultsPage');
-            }}
-          >
-            <Text>View Result</Text>
-          </Button>
-        </View>
-      )
     }
   }
 
@@ -96,6 +75,20 @@ class Waiting extends Component {
     const { processing, processingAfter10, errored, finished } = this.state;
     return (
       <Container>
+        <Ionicons 
+          name="md-home"
+          style={{ 
+            position: 'absolute', 
+            zIndex: 1,
+            right: 50,
+            top: 20
+          }}
+          size={48}
+          color="black"
+          onPress={() => {
+            () => navigation.push('recordingModule');
+          }}
+        />
         <Content>
           <this.renderWaitingText processing={processing} processingAfter10={processingAfter10} errored={errored} finished={finished} />
         </Content>
@@ -108,7 +101,7 @@ const styles = StyleSheet.create({
   card: {
     alignItems: 'center',
     padding: 40,
-    marginTop: 170
+    marginTop: 50
   }
 });
 

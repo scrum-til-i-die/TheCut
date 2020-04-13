@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
-import { Container, Button, Content, List, ListItem, Text } from 'native-base';
-import api from '../web';
-import GLOBAL from '../global.js';
+import { Container, Content, List, ListItem, Text } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
 
 class Results extends Component {
@@ -61,6 +59,10 @@ class Results extends Component {
 
             <ListItem>
               <Text>Runtime: {this.state.metadata.runtime} min</Text>
+            </ListItem>
+
+            <ListItem>
+              <Text>Genres: {this.state.metadata.genres}</Text>
             </ListItem>
           </List>
         </Content>
