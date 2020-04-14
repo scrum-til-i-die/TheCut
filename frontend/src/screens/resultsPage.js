@@ -109,11 +109,6 @@ class Results extends Component {
             </ListItem>
           </List>
         </Content>
-
-        {/* <Button block dark onPress={function () { navigation.push("recordingModule") }}>
-          <Text>Record Again</Text>
-        </Button> */}
-
       </Container>
     )
   }
