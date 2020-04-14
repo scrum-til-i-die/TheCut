@@ -59,7 +59,6 @@ class ProcessFile(threading.Thread):
         elif ((not len(self.videoResult)) and len(self.audioResult)):
             resultId = next(iter(self.audioResult))
         elif (len(inter) == 0):
-            print('case neither lol')
             audioTop = next(iter(self.audioResult))
             videoTop = next(iter(self.videoResult))
             audioTopResult = self.audioResult[audioTop]

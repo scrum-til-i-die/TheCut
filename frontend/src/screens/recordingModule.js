@@ -138,7 +138,7 @@ class RecordingModule extends Component {
       <View
         style={styles.camWrapper}
       >
-        { cameraPermission ? (
+        {cameraPermission ? (
           <Camera
             ref={cam => (this.cam = cam)}
             style={styles.preview}
