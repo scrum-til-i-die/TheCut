@@ -54,7 +54,11 @@ class ProcessFile(threading.Thread):
         resultId = None
         
         inter = self.audioResult.keys() & self.videoResult.keys()
-        if (len(inter) == 0):
+        if ((not len(self.audioResult)) and len(self.videoResult)):
+            resultId = next(iter(self.videoResult))
+        elif ((not len(self.videoResult)) and len(self.audioResult)):
+            resultId = next(iter(self.audioResult))
+        elif (len(inter) == 0):
             audioTop = next(iter(self.audioResult))
             videoTop = next(iter(self.videoResult))
             audioTopResult = self.audioResult[audioTop]

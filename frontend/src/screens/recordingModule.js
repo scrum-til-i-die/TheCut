@@ -5,6 +5,7 @@ import * as Permissions from 'expo-permissions';
 import api from '../web';
 import FormData from 'form-data';
 import styles from './styles';
+import GLOBAL from '../global.js';
 import VideoPlayer from '../components/VideoPlayer'
 import moment from 'moment';
 
@@ -23,6 +24,7 @@ class RecordingModule extends Component {
   }
 
   async componentDidMount() {
+    GLOBAL.job_id = null;
     await Permissions.askAsync(Permissions.AUDIO_RECORDING);
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
     if (status === "granted") {
@@ -31,22 +33,6 @@ class RecordingModule extends Component {
       return <Text>No access to camera</Text>;
     }
   }
-
-  _uploadVideo = async () => {
-    const { video } = this.state;
-    const type = 'video/mp4';
-    const uri = video.uri;
-
-    // Form object for video file
-    const data = new FormData();
-    data.append("video", {
-      name: uri,
-      type,
-      uri
-    });
-
-    api.uploadVideo(data);
-  };
 
   _StopRecord = async () => {
     if (this.state.time < 10) {
@@ -106,9 +92,26 @@ class RecordingModule extends Component {
     this.setState({ playback: false });
   }
 
-  upload() {
+  upload = async () => {
     const { navigation } = this.props;
-    navigation.push('waitingPage');
+    const { video } = this.state;
+    const type = 'video/mp4';
+    const uri = video.uri;
+
+    // Form object for video file
+    const data = new FormData();
+    data.append("video", {
+      name: uri,
+      type,
+      uri
+    });
+    navigation.push('resultsPage');
+
+    await api.uploadVideo(data).then(
+      function(response) {
+        GLOBAL.job_id = response.data.job_id;
+      });
+    
   }
 
   startTimer = () => {
@@ -140,46 +143,37 @@ class RecordingModule extends Component {
             ref={cam => (this.cam = cam)}
             style={styles.preview}
           >
-            {video && (
-              <TouchableOpacity
-                onPress={function () {
-                  // this._uploadVideo;
-                }}
-              >
-                {playback &&
-                  <VideoPlayer
-                    videoURI={video.uri}
-                    setPlayback={this.setPlayback}
-                    upload={this.upload}
-                  >
-                  </VideoPlayer>
-                }
-              </TouchableOpacity>
-            )}
-            <Text style={styles.timer}>
+          <Text style={styles.timer}>
+            {recording &&
+          <Text>●{this.convertTimeString(time)}</Text>}
+        </Text>
+          </Camera>) :
+          <TouchableOpacity onPress={this._showCamera}>
+            <Text> Record </Text>
+          </TouchableOpacity>
+        }
+        
+        { video && playback &&
+          <VideoPlayer 
+            videoURI = {video.uri} 
+            setPlayback={this.setPlayback}
+            upload={this.upload}
+          ></VideoPlayer>
+        }
+        <View style={styles.content}>
+          <TouchableOpacity
+            onPress={this.toogleRecord}
+            style={ 
+              playback ? 
+                styles.hidden 
+              : styles.buttonContainer
+            }>
+            <Text style={{ textAlign: "center" }}>
               {recording &&
-                <Text >●{this.convertTimeString(time)}</Text>}
+              <View style={styles.circleInside}></View>}
             </Text>
-            <View style={styles.content}>
-              <TouchableOpacity
-                onPress={this.toogleRecord}
-                style={
-                  playback ?
-                    styles.hidden
-                    : styles.buttonContainer
-                }
-              >
-                <Text style={{ textAlign: "center" }}>
-                  {recording &&
-                    <View style={styles.circleInside}></View>}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </Camera>) : (
-            <TouchableOpacity onPress={this._showCamera}>
-              <Text> Record </Text>
-            </TouchableOpacity>
-          )}
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }

@@ -4,7 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import recordingModule from './src/screens/recordingModule';
 import waitingPage from './waitingPage';
-import resultsPage from './resultsPage';
+import resultsPage from './src/screens/resultsPage';
 
 const Stack = createStackNavigator();
 
@@ -25,14 +25,15 @@ export default class App extends React.Component {
             name="waitingPage" 
             component={waitingPage} 
             options={{ 
-              title: 'Processing' 
+              title: 'Processing',
             }} 
           />
           <Stack.Screen 
             name="resultsPage" 
             component={resultsPage} 
             options={{ 
-              title: 'Results' 
+              title: 'Results',
+              headerShown: false,
             }} 
           />
         </Stack.Navigator>

@@ -8,7 +8,7 @@ export default {
             data,
         )
         .then(function (response) {
-            console.log(response);
+            return response;
         })
         .catch(function (error) {
             console.log(error);
@@ -16,6 +16,19 @@ export default {
     },
     // Retrieves results from API for specific uuid
     getResults(id) {
-        return api.get(id);
+        return api.get(
+            '/status',
+            {
+                params: {
+                  jobId: id
+                }
+            }
+        )
+        .then(function (response) {
+            return response;
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
     }
 }

@@ -1,8 +1,8 @@
 {
-  "hostType": "lan",
-  "lanType": "ip",
   "dev": true,
   "minify": false,
-  "urlRandomness": "wy-ggs",
+  "hostType": "lan",
+  "lanType": "ip",
+  "urlRandomness": "f6-3a5",
   "https": false
 }

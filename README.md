@@ -10,11 +10,32 @@
 - node
 - npm
 - react-native
-- python
-- ??
+- docker
+- docker-compose
 
 ### Development Set Up
-`npm install` to install dependencies.
+
+#### ClientSide
+
+```
+$ cd frontend
+```
+
+1. `yarn intall --ignore-engines` to install dependences
+2. Make sure you have expo client installed on machine
+    - get the expo app on your phone as well
+3. `yarn start`
+4. scan the QR code to access application
+
+#### Serverside
+
+```
+$ cd server
+```
+
+1. docker-compose build (only once or when code changes)
+2. docker-compose up
+
 #### React-Native Set Up
 Follow the link to set up Android/Java development environment \
 https://facebook.github.io/react-native/docs/getting-started \
