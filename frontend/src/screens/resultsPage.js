@@ -7,79 +7,79 @@ import api from '../web';
 import GLOBAL from '../global.js';
 
 class Results extends Component {
-	constructor() {
-		super();
-		this.timer = null;
-	}
+  constructor() {
+    super();
+    this.timer = null;
+  }
   state = {
     metadata: {
-			title: 'Not Found',
-			overview: 'Unknown',
-			runtime: '0',
-			genres: 'Unknown',
-		},
-		loading: true,
+      title: 'Not Found',
+      overview: 'Unknown',
+      runtime: '0',
+      genres: 'Unknown',
+    },
+    loading: true,
   };
   
   async componentDidMount() {
-		this.timer = setInterval(async () => {
+    this.timer = setInterval(async () => {
       if (GLOBAL.job_id != null) {
         await api.getResults(GLOBAL.job_id).then(res => {
           if (res.data.status === "success") {
-						this.setState({ loading: false });
-						clearInterval(this.timer);
-						GLOBAL.job_id = null;
-						this.setState({ metadata: res.data.result});
+            this.setState({ loading: false });
+            clearInterval(this.timer);
+            GLOBAL.job_id = null;
+            this.setState({ metadata: res.data.result});
           }
           else if (res.data.status === "fail") {
-						clearInterval(this.timer);
-						this.setState({ loading: false });
+            clearInterval(this.timer);
+            this.setState({ loading: false });
           }
         })
       }
-		}, 3000);
+    }, 3000);
   }
 
   componentWillUnmount(){
-		clearInterval(this.timer);
+    clearInterval(this.timer);
   }
 
   render() {
     const { navigation } = this.props;
     return (
       <Container>
-				{this.state.loading &&
+        {this.state.loading &&
 
-					<Overlay isVisible>
-						<View style={styles.loading}>
-							<Text>Your request is being processed</Text>
-							
-							<ActivityIndicator size='large' />
-							<Text onPress={() => {
-								this.setState({ loading: false}); 
-								clearInterval(this.timer);
-								GLOBAL.job_id = null;
-								navigation.push('recordingModule');  
-							}}>Cancel</Text>
-						</View>
-				
-				</Overlay>
-				}
+          <Overlay isVisible>
+            <View style={styles.loading}>
+              <Text>Your request is being processed</Text>
+              
+              <ActivityIndicator size='large' />
+              <Text onPress={() => {
+                this.setState({ loading: false}); 
+                clearInterval(this.timer);
+                GLOBAL.job_id = null;
+                navigation.push('recordingModule');  
+              }}>Cancel</Text>
+            </View>
+        
+        </Overlay>
+        }
         <Text>{this.state.metadata.title}</Text>
-				<Ionicons 
-					name="md-home"
-					style={{ 
-						position: 'absolute',
-						zIndex: 1,
-						right: 50,
-						top: 20
-					}}
-					size={48}
-					color="black"
-					onPress={() => {
-						navigation.push('recordingModule');
-					}}
-				/>
+        <Ionicons 
+          name="md-home"
+          style={{ 
+            position: 'absolute',
+            zIndex: 1,
+            right: 50,
+            top: 20
+          }}
+          size={48}
+          color="black"
+          onPress={() => {
+            navigation.push('recordingModule');
+          }}
+        />
         <Content>
           <List>
             <ListItem itemDivider>
@@ -129,15 +129,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 40,
     marginTop: 170
-	},
-	loading: {
+  },
+  loading: {
     position: 'absolute',
     left: 0,
     right: 0,
     top: 0,
     bottom: 0,
     alignItems: 'center',
-		justifyContent: 'center',
+    justifyContent: 'center',
   }
 });
 
