@@ -4,8 +4,6 @@ from google.cloud import vision_v1
 from google.cloud.vision import types
 from collections import defaultdict
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/app/secrets/TheCut-5b433024b0c1.json"
-
 def SplitVideo(job_id):
     # Base Path for job
     job_path = "/app/uploads/" + job_id

@@ -1,32 +1,75 @@
 import React, { Component } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, ActivityIndicator, View } from 'react-native';
 import { Container, Content, List, ListItem, Text } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
+import { Overlay } from 'react-native-elements';
+import api from '../web';
+import GLOBAL from '../global.js';
 
 class Results extends Component {
+	constructor() {
+		super();
+		this.timer = null;
+	}
   state = {
     metadata: {
-    }
+			title: 'Not Found',
+			overview: 'Unknown',
+			runtime: '0',
+			genres: 'Unknown',
+		},
+		loading: true,
   };
   
   async componentDidMount() {
-    const { route } = this.props;
-    this.setState({ metadata: route.params });
+		this.timer = setInterval(async () => {
+      if (GLOBAL.job_id != null) {
+        await api.getResults(GLOBAL.job_id).then(res => {
+          if (res.data.status === "success") {
+						this.setState({ loading: false });
+						clearInterval(this.timer);
+						GLOBAL.job_id = null;
+						this.setState({ metadata: res.data.result});
+          }
+          else if (res.data.status === "fail") {
+						clearInterval(this.timer);
+						this.setState({ loading: false });
+          }
+        })
+      }
+		}, 3000);
   }
 
   componentWillUnmount(){
-    this.setState({ metadata: {} });
+		clearInterval(this.timer);
   }
 
   render() {
     const { navigation } = this.props;
     return (
       <Container>
+				{this.state.loading &&
+
+					<Overlay isVisible>
+						<View style={styles.loading}>
+							<Text>Your request is being processed</Text>
+							
+							<ActivityIndicator size='large' />
+							<Text onPress={() => {
+								this.setState({ loading: false}); 
+								clearInterval(this.timer);
+								GLOBAL.job_id = null;
+								navigation.push('recordingModule');  
+							}}>Cancel</Text>
+						</View>
+				
+				</Overlay>
+				}
         <Text>{this.state.metadata.title}</Text>
-        <Ionicons 
+				<Ionicons 
 					name="md-home"
 					style={{ 
-						position: 'absolute', 
+						position: 'absolute',
 						zIndex: 1,
 						right: 50,
 						top: 20
@@ -86,6 +129,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 40,
     marginTop: 170
+	},
+	loading: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: 'center',
+		justifyContent: 'center',
   }
 });
 

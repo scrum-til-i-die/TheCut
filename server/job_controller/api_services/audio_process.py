@@ -15,8 +15,6 @@ from dotenv import load_dotenv
 from collections import defaultdict
 import requests
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/app/secrets/TheCut-5b433024b0c1.json"
-
 load_dotenv()
 API_KEY = os.getenv('CUSTOM_SEARCH_API_KEY')
 CSE_ID = os.getenv('CUSTOM_SEARCH_ID')

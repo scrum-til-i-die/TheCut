@@ -105,12 +105,11 @@ class RecordingModule extends Component {
       type,
       uri
     });
-    navigation.push('waitingPage');
+    navigation.push('resultsPage');
 
     await api.uploadVideo(data).then(
       function(response) {
         GLOBAL.job_id = response.data.job_id;
-        console.log(GLOBAL.job_id);
       });
     
   }
